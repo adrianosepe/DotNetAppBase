@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\.keys\GrappDefaultKey.pfx</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>Grapp.AppBase.Std.Db.Work</AssemblyName>
+    <RootNamespace>Grapp.AppBase.Std.Db.Work</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\.defaults\AssemblySharedCompanyInfo.cs" Link="Properties\AssemblySharedCompanyInfo.cs" />
+    <Compile Include="..\.defaults\AssemblySharedProductInfo.cs" Link="Properties\AssemblySharedProductInfo.cs" />
+    <Compile Include="..\.defaults\AssemblySharedVersionInfo.cs" Link="Properties\AssemblySharedVersionInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.0" />
+    <PackageReference Include="System.Text.Json" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Grapp.AppBase.Std.Extensions\Grapp.AppBase.Std.Extensions.csproj" />
+    <ProjectReference Include="..\Grapp.AppBase.Std.Library\Grapp.AppBase.Std.Library.csproj" />
+  </ItemGroup>
+
+</Project>
