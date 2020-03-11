@@ -6,7 +6,7 @@ namespace Grapp.AppBase.Std.Exceptions.Base
 {
 	public class XDbException : XException
 	{
-		protected const string Prefix = "Grapp:";
+		protected const string Prefix = "XDbException:";
 
 		protected XDbException(DbException ex, string message) : base(message: message.Replace(Prefix, String.Empty), ex) { }
 

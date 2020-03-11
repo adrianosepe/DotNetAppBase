@@ -26,7 +26,7 @@ namespace Grapp.AppBase.Std.Library.ComponentModel.Model.Validation.Annotations.
                 return false;
             }
 
-            return (value?.ToString().Length ?? 0) < 30;
+            return (value?.ToString().Length ?? 0) < 80;
         }
     }
 }
