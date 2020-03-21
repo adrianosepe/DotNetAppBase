@@ -7,7 +7,6 @@ using System.Xml;
 using Grapp.AppBase.Std.Library.Data.Udt;
 
 // ReSharper disable UnusedMember.Global
-
 // ReSharper disable CheckNamespace
 public static class XSqlParameterExtensions
 // ReSharper restore CheckNamespace

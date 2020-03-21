@@ -2,7 +2,8 @@
 using System.Data;
 using System.Linq;
 
-namespace Grapp.AppBase.Std.Library.Data.Udt {
+namespace Grapp.AppBase.Std.Library.Data.Udt 
+{
     public class UdtKey<TKey> : UdtBase
     {
         public UdtKey()

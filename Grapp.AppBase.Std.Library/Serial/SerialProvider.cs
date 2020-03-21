@@ -112,12 +112,9 @@ namespace Grapp.AppBase.Std.Library.Serial
 
 		#region IDisposable
 
-		public void Dispose()
-		{
-			Dispose(disposing: true);
-		}
+		public void Dispose() => Dispose(disposing: true);
 
-		private void Dispose(bool disposing)
+        private void Dispose(bool disposing)
 		{
 			if(_disposed)
 			{
