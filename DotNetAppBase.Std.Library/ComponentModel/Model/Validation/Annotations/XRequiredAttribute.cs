@@ -19,37 +19,37 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation.Annotations
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if(!Enabled)
+            if (!Enabled)
             {
                 return ValidationResult.Success;
             }
 
-            if(value == null)
+            if (value == null)
             {
                 return GetErrorResult(validationContext);
             }
 
-            if(value.GetType().IsArray && ((Array)value).Length == 0)
+            if (value.GetType().IsArray && ((Array) value).Length == 0)
             {
                 return GetErrorResult(validationContext);
             }
 
-            if(value.GetType().IsEnum && !XHelper.Enums.IsDefined((Enum)value))
+            if (value.GetType().IsEnum && !XHelper.Enums.IsDefined((Enum) value))
             {
                 return GetErrorResult(validationContext);
             }
 
-            if(value is IEnumerable valueenum && !valueenum.GetEnumerator().MoveNext())
+            if (value is IEnumerable valueenum && !valueenum.GetEnumerator().MoveNext())
             {
                 return GetErrorResult(validationContext);
             }
 
-            switch(Type.GetTypeCode(value.GetType()))
+            switch (Type.GetTypeCode(value.GetType()))
             {
                 case TypeCode.Int32:
-                    if(DataType == EDataType.ZeroIsInvalid)
+                    if (DataType == EDataType.ZeroIsInvalid)
                     {
-                        if(Convert.ToInt32(value) == 0)
+                        if (Convert.ToInt32(value) == 0)
                         {
                             return GetErrorResult(validationContext);
                         }
@@ -58,7 +58,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation.Annotations
                     break;
 
                 case TypeCode.String:
-                    if(string.IsNullOrEmpty(value as string))
+                    if (string.IsNullOrEmpty(value as string))
                     {
                         return GetErrorResult(validationContext);
                     }

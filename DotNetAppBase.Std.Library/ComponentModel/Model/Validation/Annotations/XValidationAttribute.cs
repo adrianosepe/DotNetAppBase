@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Linq;
 using DotNetAppBase.Std.Library.ComponentModel.Model.Enums;
 
 // ReSharper disable UnusedMember.Global
@@ -7,15 +9,25 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation.Annotations
 {
     public abstract class XValidationAttribute : XDataTypeAttribute
     {
+        public enum EValidationMode
+        {
+            Custom,
+
+            MaskDataTime,
+            MaskDateTimeAdvancingCaret,
+            MaskNumeric,
+            MaskRegEx,
+            MaskRegular,
+            MaskSimple
+        }
+
         private string _maskForEditor;
 
-        protected XValidationAttribute(EDataType dataType, EValidationMode mode) : base(dataType) => Mode = mode;
+        protected XValidationAttribute(EDataType dataType, EValidationMode mode, bool isComputed = false) : base(dataType, isComputed) => Mode = mode;
 
-        protected XValidationAttribute(EDataType dataType, EValidationMode mode, string errorMessage) 
-            : base(dataType)
+        protected XValidationAttribute(EDataType dataType, EValidationMode mode, string errorMessage, bool isComputed = false) : base(dataType, isComputed)
         {
             Mode = mode;
-
             ErrorMessage = errorMessage;
         }
 
@@ -40,18 +52,6 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation.Annotations
 
         public EModoOperacao RestrictFor { get; set; }
 
-        public sealed override bool IsValid(object value) => !Enabled || InternalIsValid(value);
-
-        public enum EValidationMode
-        {
-            Custom,
-
-            MaskDataTime,
-            MaskDateTimeAdvancingCaret,
-            MaskNumeric,
-            MaskRegEx,
-            MaskRegular,
-            MaskSimple
-        }
+        protected override bool InternalIsEnabled() => Enabled;
     }
 }

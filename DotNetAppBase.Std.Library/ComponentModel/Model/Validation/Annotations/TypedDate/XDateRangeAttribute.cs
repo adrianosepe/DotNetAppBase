@@ -23,7 +23,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation.Annotations.
             return new ValidationResult(errorMessage, new[] {validationContext.MemberName});
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult InternalIsValid(object value, ValidationContext validationContext)
         {
             var dateRange = value.As<IDateRange>();
 

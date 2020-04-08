@@ -20,7 +20,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation.Annotations.
 
         protected override bool InternalIsValid(object value) => true;
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult InternalIsValid(object value, ValidationContext validationContext)
         {
             if (validationContext == null)
             {
