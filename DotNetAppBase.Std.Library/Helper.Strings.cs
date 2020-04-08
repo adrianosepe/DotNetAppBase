@@ -40,6 +40,9 @@ namespace DotNetAppBase.Std.Library
             [ContractAnnotation("data:null => true")]
             public static bool IsEmptyOrWhiteSpace(string data) => !HasData(data);
 
+            [ContractAnnotation("data:null => false")]
+            public static bool IsNotEmptyOrWhiteSpace(string data) => HasData(data);
+
             public static bool IsLetterWithDiacritics(char eUnicodeChar)
             {
                 var s = eUnicodeChar.ToString().Normalize(NormalizationForm.FormD);
