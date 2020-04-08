@@ -30,7 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotnetAppBase.Std.Db\DotNetAppBase.Std.Db.csproj" />
+    <ProjectReference Include="..\DotNetAppBase.Std.Db\DotNetAppBase.Std.Db.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
   </ItemGroup>
 
 </Project>

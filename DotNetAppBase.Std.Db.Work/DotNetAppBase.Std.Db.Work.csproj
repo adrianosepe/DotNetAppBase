@@ -26,12 +26,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="4.7.1" />
+    <ProjectReference Include="..\DotNetAppBase.Std.Extensions\DotNetAppBase.Std.Extensions.csproj" />
+    <ProjectReference Include="..\DotNetAppBase.Std.Library\DotNetAppBase.Std.Library.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotnetAppBase.Std.Extensions\DotNetAppBase.Std.Extensions.csproj" />
-    <ProjectReference Include="..\DotnetAppBase.Std.Library\DotNetAppBase.Std.Library.csproj" />
+    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
+    <PackageReference Include="System.Text.Json" Version="4.7.1" />
   </ItemGroup>
 
 </Project>

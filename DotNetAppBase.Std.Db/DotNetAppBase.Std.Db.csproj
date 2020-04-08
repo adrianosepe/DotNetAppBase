@@ -18,9 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotnetAppBase.Std.Exceptions\DotNetAppBase.Std.Exceptions.csproj" />
-    <ProjectReference Include="..\DotnetAppBase.Std.Extensions\DotNetAppBase.Std.Extensions.csproj" />
-    <ProjectReference Include="..\DotnetAppBase.Std.Library\DotNetAppBase.Std.Library.csproj" />
+    <ProjectReference Include="..\DotNetAppBase.Std.Exceptions\DotNetAppBase.Std.Exceptions.csproj" />
+    <ProjectReference Include="..\DotNetAppBase.Std.Extensions\DotNetAppBase.Std.Extensions.csproj" />
+    <ProjectReference Include="..\DotNetAppBase.Std.Library\DotNetAppBase.Std.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
   </ItemGroup>
 
   <ItemGroup>
