@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-// ReSharper disable UnusedMemberInSuper.Global
-
 namespace DotNetAppBase.Std.Library.Tasks
 {
 	public interface ITask : IDisposable
@@ -12,7 +10,7 @@ namespace DotNetAppBase.Std.Library.Tasks
 		bool Enabled { get; }
 
 		bool Start();
-	    
-		Task<bool> Stop();
-	}
+
+        Task<bool> Stop(TimeSpan? timeout = null, bool waitComplete = false);
+    }
 }

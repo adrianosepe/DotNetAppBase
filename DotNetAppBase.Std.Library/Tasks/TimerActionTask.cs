@@ -107,7 +107,7 @@ namespace DotNetAppBase.Std.Library.Tasks
             return false;
         }
 
-        public async Task<bool> Stop()
+        public async Task<bool> Stop(TimeSpan? timeout = null, bool waitComplete = false)
         {
             if(_timer.Enabled)
             {

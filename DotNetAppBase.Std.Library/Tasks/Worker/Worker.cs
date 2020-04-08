@@ -77,7 +77,7 @@ namespace DotNetAppBase.Std.Library.Tasks.Worker
             }
         }
 
-        public async Task<bool> Stop()
+        public async Task<bool> Stop(TimeSpan? timeout = null, bool waitComplete = false)
         {
             lock (_syncRunning)
             {
