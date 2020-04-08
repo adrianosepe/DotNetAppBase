@@ -25,10 +25,8 @@
     <Compile Include="..\.defaults\AssemblySharedVersionInfo.cs" Link="Properties\AssemblySharedVersionInfo.cs" />
   </ItemGroup>
 
-
-
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" />
+    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
@@ -37,11 +35,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotnetAppBase.Std.Exceptions\DotNetAppBase.Std.Exceptions.csproj" />
+    <ProjectReference Include="..\DotNetAppBase.Std.Exceptions\DotNetAppBase.Std.Exceptions.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="System.Web" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
   </ItemGroup>
 
   <ItemGroup>
