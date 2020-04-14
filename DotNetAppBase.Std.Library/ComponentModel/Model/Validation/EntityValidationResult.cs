@@ -46,7 +46,15 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 		public IEnumerable<ValidationResult> Validations => InternalValidations;
 
         // ReSharper disable LocalizableElement
-        public override string ToString() => Validations.Select(result => result.ErrorMessage).Aggregate((s, s1) => s + "\n" + s1);
-		// ReSharper restore LocalizableElement
+        public override string ToString()
+        {
+            if (InternalValidations.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            return InternalValidations.Select(result => result.ErrorMessage).Aggregate((s, s1) => s + "\n" + s1);
+        }
+        // ReSharper restore LocalizableElement
 	}
 }
