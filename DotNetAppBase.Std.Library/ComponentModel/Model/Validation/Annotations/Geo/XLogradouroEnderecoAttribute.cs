@@ -4,6 +4,6 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation.Annotations.
 {
 	public class XLogradouroEnderecoAttribute : XMaxLengthAttribute
 	{
-		public XLogradouroEnderecoAttribute() : base(60) { }
+		public XLogradouroEnderecoAttribute() : base(150) { }
 	}
 }
