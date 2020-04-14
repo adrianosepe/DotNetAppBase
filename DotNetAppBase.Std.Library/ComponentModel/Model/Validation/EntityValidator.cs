@@ -72,16 +72,25 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
         public static EntityValidationResult ValidateRecursive(object entity, out List<ValidationResult> validationResults)
         {
             validationResults = new List<ValidationResult>();
-            var vc = new ValidationContext(entity, null, null);
 
-            Validator.TryValidateObject(entity, vc, validationResults, true);
+            ValidateRecursive(entity, validationResults, 0, 4);
 
             return new EntityValidationResult(validationResults);
         }
 
-        public static void ValidateRecursive<T>(T obj, List<ValidationResult> results)
+        public static void ValidateRecursive(object obj, List<ValidationResult> results, int level, int maxDeep)
         {
+            if (obj == null)
+            {
+                return;
+            }
+
             Validate(obj, results);
+
+            if (++level >= maxDeep)
+            {
+                return;
+            }
 
             var properties = obj
                 .GetType()
@@ -99,16 +108,24 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
                 }
 
                 var value = XHelper.Reflections.Properties.ReadValue<object>(obj, property.Name);
-                if (value != null && value is IEnumerable asEnumerable)
-                {
-                    foreach (var enumObj in asEnumerable)
+
+                switch (value) {
+                    case null:
+                        continue;
+
+                    case IEnumerable asEnumerable:
                     {
-                        ValidateRecursive(enumObj, results);
+                        foreach (var enumObj in asEnumerable)
+                        {
+                            ValidateRecursive(enumObj, results, level, maxDeep);
+                        }
+
+                        break;
                     }
-                }
-                else
-                {
-                    ValidateRecursive(value, results);
+
+                    default:
+                        ValidateRecursive(value, results, level, maxDeep);
+                        break;
                 }
             }
         }
