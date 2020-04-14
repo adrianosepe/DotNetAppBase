@@ -31,11 +31,11 @@ namespace DotNetAppBase.Std.Library
                 File.Create(fileName).Dispose();
             }
 
-            public static string CreateFileNameFromDateTime(DateTime? dateTime = null)
+            public static string CreateFileNameFromDateTime(DateTime? dateTime = null, string prefix = null)
             {
                 dateTime ??= DateTime.Now;
 
-                return dateTime.Value.ToString("dd-MM-yyyy-HHmmss", CultureInfo.InvariantCulture);
+                return prefix + dateTime.Value.ToString("dd-MM-yyyy-HHmmss", CultureInfo.InvariantCulture);
             }
 
             public static string CreateFileNameFromDateTime(FileExtension fileExtension, DateTime? dateTime = null)
@@ -66,13 +66,13 @@ namespace DotNetAppBase.Std.Library
                 return fileExtension.ChangeExtension(Path.GetTempFileName());
             }
 
-            public static string CreateFileNameOnUserDocuments(FileExtension fileExtension, DateTime? dateTime = null)
+            public static string CreateFileNameOnUserDocuments(FileExtension fileExtension, DateTime? dateTime = null, string prefix = null)
             {
                 XContract.ArgIsNotNull(fileExtension, nameof(fileExtension));
 
                 var myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-                return fileExtension.ChangeExtension(Path.Combine(myDocuments, CreateFileNameFromDateTime(dateTime)));
+                return fileExtension.ChangeExtension(Path.Combine(myDocuments, CreateFileNameFromDateTime(dateTime, prefix)));
             }
 
             public static void MoveVersioningIfExists(string originalFileName, string destinationDirectory)
