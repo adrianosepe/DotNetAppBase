@@ -8,14 +8,12 @@ namespace DotNetAppBase.Std.Exceptions.Internals
 		public class Resources
 		{
 			public static byte[] LoadResource(Assembly asm, string resourceName)
-			{
-				using(var stream = new MemoryStream())
-				{
-					asm.GetManifestResourceStream($"{asm.GetName().Name}.{resourceName}")?.CopyTo(stream);
+            {
+                using var stream = new MemoryStream();
+                asm.GetManifestResourceStream($"{asm.GetName().Name}.{resourceName}")?.CopyTo(stream);
 
-					return stream.ToArray();
-				}
-			}
+                return stream.ToArray();
+            }
 
             public static byte[] LoadResource(object context, string resourceName) => LoadResource(context.GetType().Assembly, resourceName);
         }

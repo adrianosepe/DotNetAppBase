@@ -279,10 +279,8 @@ namespace DotNetAppBase.Std.Db
             {
                 DbTraceProvider.Instance.Trace(this, cmd);
 
-                using(var da = _session.CreateDataAtapter(cmd))
-                {
-                    da.Fill(dataTable);
-                }
+                using var da = _session.CreateDataAtapter(cmd);
+                da.Fill(dataTable);
             }
             finally
             {
@@ -331,35 +329,29 @@ namespace DotNetAppBase.Std.Db
 
                 case EReturnType.DataSet:
                 {
-                    using(var da = _session.CreateDataAtapter(command))
-                    {
-                        var ds = new DataSet();
-                        da.Fill(ds);
+                    using var da = _session.CreateDataAtapter(command);
+                    var ds = new DataSet();
+                    da.Fill(ds);
 
-                        return ds;
-                    }
+                    return ds;
                 }
 
                 case EReturnType.DataTable:
                 {
-                    using(var da = _session.CreateDataAtapter(command))
-                    {
-                        var ds = new DataSet();
-                        da.Fill(ds);
+                    using var da = _session.CreateDataAtapter(command);
+                    var ds = new DataSet();
+                    da.Fill(ds);
 
-                        return ds.Tables[0];
-                    }
+                    return ds.Tables[0];
                 }
 
                 case EReturnType.DataRow:
                 {
-                    using(var da = _session.CreateDataAtapter(command))
-                    {
-                        var ds = new DataSet();
-                        da.Fill(ds);
+                    using var da = _session.CreateDataAtapter(command);
+                    var ds = new DataSet();
+                    da.Fill(ds);
 
-                        return ds.Tables[0].Rows.Count == 0 ? null : ds.Tables[0].Rows[0];
-                    }
+                    return ds.Tables[0].Rows.Count == 0 ? null : ds.Tables[0].Rows[0];
                 }
 
                 case EReturnType.Count:

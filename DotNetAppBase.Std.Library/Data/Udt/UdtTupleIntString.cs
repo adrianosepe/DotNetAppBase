@@ -13,7 +13,7 @@ namespace DotNetAppBase.Std.Library.Data.Udt
 
         public void Add(int? item1, string item2)
         {
-            Rows.Add(XHelper.Sql.ToDbValue(item2), XHelper.Sql.ToDbValue(item2));
+            Rows.Add(XHelper.Sql.ToDbValue(item1), XHelper.Sql.ToDbValue(item2));
         }
     }
 }

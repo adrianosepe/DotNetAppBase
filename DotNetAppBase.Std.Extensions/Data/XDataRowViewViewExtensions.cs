@@ -25,7 +25,6 @@ public static class XDataRowViewViewExtensions
     public static T Get<T>(this DataRowView row, string field, T defaultValue)
     {
         var value = row[field];
-
         return value == DBNull.Value ? defaultValue : value.ConvertTo(defaultValue);
     }
 

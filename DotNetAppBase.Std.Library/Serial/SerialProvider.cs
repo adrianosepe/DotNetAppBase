@@ -24,7 +24,11 @@ namespace DotNetAppBase.Std.Library.Serial
 
 		public bool IsOpen => _serial.IsOpen;
 
+        public event EventHandler BeginDelegateDataReceived;
+
 		public event EventHandler<DataEventArgs<byte[]>> DataReceived;
+
+        public event EventHandler EndDelegateDataReceived;
 
 		public bool Close()
 		{
@@ -87,8 +91,12 @@ namespace DotNetAppBase.Std.Library.Serial
 
                             if (_buffer.Length > 0)
                             {
-                                DataReceived?.Invoke(this, new DataEventArgs<byte[]>(_buffer.ToArray()));
-                            }
+                                XHelper.Flow.Ensure(() => BeginDelegateDataReceived?.Invoke(this, EventArgs.Empty));
+
+                                XHelper.Flow.Ensure(() => DataReceived?.Invoke(this, new DataEventArgs<byte[]>(_buffer.ToArray())));
+
+                                XHelper.Flow.Ensure(() => EndDelegateDataReceived?.Invoke(this, EventArgs.Empty));
+							}
                         }
                         catch (TimeoutException)
                         {

@@ -36,7 +36,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation.Annotations.
 
             if (isNullable)
             {
-                XHelper.Reflections.Properties.WriteValue(validationContext.ObjectType, propertyInfo, null);
+                XHelper.Reflections.Properties.WriteValue(validationContext.ObjectInstance, propertyInfo, null);
             } 
             else if(!TryIsNotNullValidNavigationProperty(validationContext))
             {

@@ -68,16 +68,15 @@ namespace DotNetAppBase.Std.Db.SqlServer
                     ConnectTimeout = connectionTimeout
                 };
 
-            using(var conn = InternalCreateConnection(local.ToString()))
-            using(var comm = conn.CreateCommand())
-            {
-                conn.Open();
+            using var conn = InternalCreateConnection(local.ToString());
+            using var comm = conn.CreateCommand();
+            
+            conn.Open();
 
-                comm.CommandText = "SELECT GETDATE()";
-                var dt = (DateTime)comm.ExecuteScalar();
+            comm.CommandText = "SELECT CONVERT(datetimeoffset, GETDATE) AT TIME ZONE 'E. South America Standard Time'";
+            var dt = (DateTime)comm.ExecuteScalar();
 
-                return dt;
-            }
+            return dt;
         }
     }
 }

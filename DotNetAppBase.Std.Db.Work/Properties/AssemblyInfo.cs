@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyTitle("Grapp.AppBase.Std.Db.Work")]
-[assembly: AssemblyDescription("Grapp.AppBase.Std.Db.Work.dll")]
-[assembly: AssemblyDefaultAlias("Grapp.AppBase.Std.Db.Work.dll")]
+[assembly: AssemblyTitle("DotNetAppBase.Std.Db.Work")]
+[assembly: AssemblyDescription("DotNetAppBase.Std.Db.Work.dll")]
+[assembly: AssemblyDefaultAlias("DotNetAppBase.Std.Db.Work.dll")]

@@ -35,7 +35,6 @@ public static class XDataRowExtensions
 	public static T Get<T>(this DataRow row, string field, T defaultValue)
 	{
 		var value = row[field];
-
 		return value == DBNull.Value ? defaultValue : value.ConvertTo(defaultValue);
     }
 

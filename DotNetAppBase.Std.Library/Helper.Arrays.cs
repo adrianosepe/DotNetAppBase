@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using DotNetAppBase.Std.Exceptions.Assert;
 using DotNetAppBase.Std.Exceptions.Bussines;
 
@@ -27,6 +29,58 @@ namespace DotNetAppBase.Std.Library
 
                     error = Exceptions.GetMessageOnTopOfStack(ex);
                     data = default;
+
+                    return false;
+                }
+            }
+
+            public static async Task<T> TryGetWithAttempt<T>(Func<T> funcGet, CancellationToken cancellationToken, T defaultValue = default, int attempts = 1, int delayBetweenAttempts = 200)
+            {
+                try
+                {
+                    return funcGet();
+                }
+                catch (Exception)
+                {
+                    if (!cancellationToken.IsCancellationRequested)
+                    {
+                        if (--attempts > 0)
+                        {
+                            await Task.Delay(delayBetweenAttempts, cancellationToken);
+
+                            if (!cancellationToken.IsCancellationRequested)
+                            {
+                                return await TryGetWithAttempt(funcGet, cancellationToken, defaultValue, attempts, delayBetweenAttempts);
+                            }
+                        }
+                    }
+
+                    return defaultValue;
+                }
+            }
+
+            public static async Task<bool> TryExecuteWithAttempt(Action action, CancellationToken cancellationToken, int attempts = 1, int delayBetweenAttempts = 200)
+            {
+                try
+                {
+                    action();
+
+                    return true;
+                }
+                catch (Exception)
+                {
+                    if (!cancellationToken.IsCancellationRequested)
+                    {
+                        if (--attempts > 0)
+                        {
+                            await Task.Delay(delayBetweenAttempts, cancellationToken);
+
+                            if (!cancellationToken.IsCancellationRequested)
+                            {
+                                return await TryExecuteWithAttempt(action, cancellationToken, attempts, delayBetweenAttempts);
+                            }
+                        }
+                    }
 
                     return false;
                 }

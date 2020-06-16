@@ -19,10 +19,11 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Svc
 
         public bool Fail => !Ok;
 
-        public static Result<TData> Success(TData data) =>
+        public static Result<TData> Success(TData data, string success=null) =>
             new Result<TData>
                 {
                     Data = data,
+                    StatusMessage = success,
                     Status = EResultStatus.Ok
                 };
 
@@ -39,6 +40,15 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Svc
                     StatusMessage = success,
                     Status = EResultStatus.Ok
                 };
+
+        public static Result<TData> Clone<TInput>(Result<TInput> origin, TData data=default) =>
+            new Result<TData>
+                {
+                    StatusMessage = origin.StatusMessage,
+                    Status = origin.Status,
+                    Details = origin.Details,
+                    Data = data
+            };
 
         public static Result<TData> Exception(Exception ex) => Error(ex.Message);
 
