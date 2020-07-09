@@ -38,11 +38,11 @@ namespace DotNetAppBase.Std.Library
                 return prefix + dateTime.Value.ToString("dd-MM-yyyy-HHmmss", CultureInfo.InvariantCulture);
             }
 
-            public static string CreateFileNameFromDateTime(FileExtension fileExtension, DateTime? dateTime = null)
+            public static string CreateFileNameFromDateTime(FileExtension fileExtension, DateTime? dateTime = null, string prefix = null)
             {
                 XContract.ArgIsNotNull(fileExtension, nameof(fileExtension));
 
-                return fileExtension.ChangeExtension(CreateFileNameFromDateTime(dateTime));
+                return prefix + fileExtension.ChangeExtension(CreateFileNameFromDateTime(dateTime));
             }
 
             public static string CreateFileNameFromGuid(Guid? id = null)
