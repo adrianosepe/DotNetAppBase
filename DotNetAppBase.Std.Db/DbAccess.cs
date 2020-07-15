@@ -1,3 +1,30 @@
+#region License
+
+// Copyright(c) 2020 GrappTec
+// 
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -23,12 +50,12 @@ namespace DotNetAppBase.Std.Db
 
         public DbAccess()
         {
-            if(DbStorage.Instance.DefaultDatabase == null)
+            if (DbStorage.Instance.DefaultDatabase == null)
             {
                 throw new XException("Não foi possível recuperar a base de dados default.");
             }
 
-            if(DbStorage.Instance.DefaultDatabase.DefaultSession is DbSession session)
+            if (DbStorage.Instance.DefaultDatabase.DefaultSession is DbSession session)
             {
                 session.AddAccess(this);
             }
@@ -58,7 +85,7 @@ namespace DotNetAppBase.Std.Db
             get => _session;
             internal set
             {
-                if(_session == value)
+                if (_session == value)
                 {
                     return;
                 }
@@ -76,9 +103,9 @@ namespace DotNetAppBase.Std.Db
             {
                 return InternalExecuteFunc<TResult, TParam>(funcName, parameters);
             }
-            catch(DbException ex)
+            catch (DbException ex)
             {
-                if(_session.RetryInteractionOnDbExcepion(ex))
+                if (_session.RetryInteractionOnDbExcepion(ex))
                 {
                     return InternalExecuteFunc<TResult, TParam>(funcName, parameters);
                 }
@@ -95,9 +122,9 @@ namespace DotNetAppBase.Std.Db
             {
                 return InternalExecuteProc<TResult, TParam>(procName, parameters);
             }
-            catch(DbException ex)
+            catch (DbException ex)
             {
-                if(_session.RetryInteractionOnDbExcepion(ex))
+                if (_session.RetryInteractionOnDbExcepion(ex))
                 {
                     return InternalExecuteProc<TResult, TParam>(procName, parameters);
                 }
@@ -116,9 +143,9 @@ namespace DotNetAppBase.Std.Db
             {
                 InternalExecuteProcAndFill(dataTable, procName, parameters);
             }
-            catch(DbException ex)
+            catch (DbException ex)
             {
-                if(_session.RetryInteractionOnDbExcepion(ex))
+                if (_session.RetryInteractionOnDbExcepion(ex))
                 {
                     InternalExecuteProcAndFill(dataTable, procName, parameters);
 
@@ -141,9 +168,9 @@ namespace DotNetAppBase.Std.Db
             {
                 return InternalExecuteText<TResult, TParam>(sql, parameters, behavior);
             }
-            catch(DbException ex)
+            catch (DbException ex)
             {
-                if(_session.RetryInteractionOnDbExcepion(ex))
+                if (_session.RetryInteractionOnDbExcepion(ex))
                 {
                     return InternalExecuteText<TResult, TParam>(sql, parameters, behavior);
                 }
@@ -159,49 +186,9 @@ namespace DotNetAppBase.Std.Db
             Context.Open();
         }
 
-        private static EReturnType GetReturnType(Type type)
-        {
-            if(type == typeof(DataSet))
-            {
-                return EReturnType.DataSet;
-            }
-
-            if(type == typeof(DbDataReader))
-            {
-                return EReturnType.DataReader;
-            }
-
-            if(type == typeof(Count))
-            {
-                return EReturnType.Count;
-            }
-
-            if(type == typeof(DataTable))
-            {
-                return EReturnType.DataTable;
-            }
-
-            if(type == typeof(DataRow))
-            {
-                return EReturnType.DataRow;
-            }
-
-            if(type == typeof(Return))
-            {
-                return EReturnType.ProcReturn;
-            }
-
-            if(type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ReturnAndData<>))
-            {
-                return EReturnType.ProcReturnAndValue;
-            }
-
-            return EReturnType.Unknown;
-        }
-
         private void AddDisposableObject(params IDisposable[] objects)
         {
-            foreach(var obj in objects)
+            foreach (var obj in objects)
             {
                 _disposableObjects.Add(obj);
             }
@@ -209,14 +196,14 @@ namespace DotNetAppBase.Std.Db
 
         private static void AddParameters<TParam>(DbCommand command, IReadOnlyCollection<TParam> parameters) where TParam : DbParameter
         {
-            if(parameters == null || parameters.Count == 0)
+            if (parameters == null || parameters.Count == 0)
             {
                 return;
             }
 
-            foreach(var param in parameters)
+            foreach (var param in parameters)
             {
-                if(param == null)
+                if (param == null)
                 {
                     continue;
                 }
@@ -228,6 +215,138 @@ namespace DotNetAppBase.Std.Db
         private void ConfigCommandTimeout(IDbCommand command)
         {
             command.CommandTimeout = CommandTimeout ?? Session.Database.CommandTimeout;
+        }
+
+        private object ExecuteCommand(Type returnType, DbCommand command, CommandBehavior behavior = CommandBehavior.Default)
+        {
+            var enumReturnType = GetReturnType(returnType);
+
+            switch (enumReturnType)
+            {
+                case EReturnType.DataReader:
+                {
+                    var reader = command.ExecuteReader(behavior);
+                    AddDisposableObject(command, reader);
+
+                    return reader;
+                }
+
+                case EReturnType.DataSet:
+                {
+                    using var da = _session.CreateDataAtapter(command);
+                    var ds = new DataSet();
+                    da.Fill(ds);
+
+                    return ds;
+                }
+
+                case EReturnType.DataTable:
+                {
+                    using var da = _session.CreateDataAtapter(command);
+                    var ds = new DataSet();
+                    da.Fill(ds);
+
+                    return ds.Tables[0];
+                }
+
+                case EReturnType.DataRow:
+                {
+                    using var da = _session.CreateDataAtapter(command);
+                    var ds = new DataSet();
+                    da.Fill(ds);
+
+                    return ds.Tables[0].Rows.Count == 0 ? null : ds.Tables[0].Rows[0];
+                }
+
+                case EReturnType.Count:
+                {
+                    return (Count) command.ExecuteNonQuery();
+                }
+
+                case EReturnType.ProcReturn:
+                {
+                    var returnParameter = _session.CreateReturnParameter();
+                    command.Parameters.Add(returnParameter);
+
+                    command.ExecuteNonQuery();
+
+                    return Activator.CreateInstance(returnType, returnParameter.Value);
+                }
+
+                // Na teoria isso não funciona!
+                case EReturnType.ProcReturnAndValue:
+                {
+                    var secondDataType = returnType.GetGenericArguments()[0];
+
+                    var returnParameter = _session.CreateReturnParameter();
+                    command.Parameters.Add(returnParameter);
+
+                    var returnData = ExecuteCommand(secondDataType, command);
+
+                    return Activator.CreateInstance(returnType, returnParameter.Value, returnData);
+                }
+
+                default:
+                {
+                    var data = command.ExecuteScalar();
+
+                    if (returnType != typeof(object))
+                    {
+                        data = Convert.ChangeType(data, returnType);
+                    }
+
+                    return data;
+                }
+            }
+        }
+
+        private static EReturnType GetReturnType(Type type)
+        {
+            if (type == typeof(DataSet))
+            {
+                return EReturnType.DataSet;
+            }
+
+            if (type == typeof(DbDataReader))
+            {
+                return EReturnType.DataReader;
+            }
+
+            if (type == typeof(Count))
+            {
+                return EReturnType.Count;
+            }
+
+            if (type == typeof(DataTable))
+            {
+                return EReturnType.DataTable;
+            }
+
+            if (type == typeof(DataRow))
+            {
+                return EReturnType.DataRow;
+            }
+
+            if (type == typeof(Return))
+            {
+                return EReturnType.ProcReturn;
+            }
+
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ReturnAndData<>))
+            {
+                return EReturnType.ProcReturnAndValue;
+            }
+
+            return EReturnType.Unknown;
+        }
+
+        private TResult InternalExecuteFunc<TResult, TParam>(string funcName, IEnumerable<TParam> parameters) where TParam : DbParameter
+        {
+            var returnParameter = _session.CreateReturnParameter().CastTo<TParam>();
+
+            InternalExecuteProc<Count, TParam>(funcName, parameters.Union(new[] {returnParameter}).ToArray());
+
+            return XHelper.Sql.GetFromDbValue<TResult>(returnParameter.Value);
         }
 
         private TResult InternalExecuteProc<TResult, TParam>(string procName, IReadOnlyCollection<TParam> parameters) where TParam : DbParameter
@@ -247,21 +366,12 @@ namespace DotNetAppBase.Std.Db
                 DbTraceProvider.Instance.Trace(this, command);
 
                 var returnType = typeof(TResult);
-                return (TResult)ExecuteCommand(returnType, command);
+                return (TResult) ExecuteCommand(returnType, command);
             }
             finally
             {
                 command.Parameters.Clear();
             }
-        }
-
-        private TResult InternalExecuteFunc<TResult, TParam>(string funcName, IEnumerable<TParam> parameters) where TParam : DbParameter
-        {
-            var returnParameter = _session.CreateReturnParameter().CastTo<TParam>();
-
-            InternalExecuteProc<Count, TParam>(funcName, parameters.Union(new[] {returnParameter}).ToArray());
-
-            return XHelper.Sql.GetFromDbValue<TResult>(returnParameter.Value);
         }
 
         private void InternalExecuteProcAndFill<TParam>(DataTable dataTable, string procName, IReadOnlyCollection<TParam> parameters) where TParam : DbParameter
@@ -305,94 +415,11 @@ namespace DotNetAppBase.Std.Db
                 DbTraceProvider.Instance.Trace(this, command);
 
                 var returnType = typeof(TResult);
-                return (TResult)ExecuteCommand(returnType, command, behavior);
+                return (TResult) ExecuteCommand(returnType, command, behavior);
             }
             finally
             {
                 command.Parameters.Clear();
-            }
-        }
-
-        private object ExecuteCommand(Type returnType, DbCommand command, CommandBehavior behavior = CommandBehavior.Default)
-        {
-            var enumReturnType = GetReturnType(returnType);
-
-            switch(enumReturnType)
-            {
-                case EReturnType.DataReader:
-                {
-                    var reader = command.ExecuteReader(behavior);
-                    AddDisposableObject(command, reader);
-
-                    return reader;
-                }
-
-                case EReturnType.DataSet:
-                {
-                    using var da = _session.CreateDataAtapter(command);
-                    var ds = new DataSet();
-                    da.Fill(ds);
-
-                    return ds;
-                }
-
-                case EReturnType.DataTable:
-                {
-                    using var da = _session.CreateDataAtapter(command);
-                    var ds = new DataSet();
-                    da.Fill(ds);
-
-                    return ds.Tables[0];
-                }
-
-                case EReturnType.DataRow:
-                {
-                    using var da = _session.CreateDataAtapter(command);
-                    var ds = new DataSet();
-                    da.Fill(ds);
-
-                    return ds.Tables[0].Rows.Count == 0 ? null : ds.Tables[0].Rows[0];
-                }
-
-                case EReturnType.Count:
-                {
-                    return (Count)command.ExecuteNonQuery();
-                }
-
-                case EReturnType.ProcReturn:
-                {
-                    var returnParameter = _session.CreateReturnParameter();
-                    command.Parameters.Add(returnParameter);
-
-                    command.ExecuteNonQuery();
-
-                    return Activator.CreateInstance(returnType, returnParameter.Value);
-                }
-
-                // Na teoria isso não funciona!
-                case EReturnType.ProcReturnAndValue:
-                {
-                    var secondDataType = returnType.GetGenericArguments()[0];
-
-                    var returnParameter = _session.CreateReturnParameter();
-                    command.Parameters.Add(returnParameter);
-
-                    var returnData = ExecuteCommand(secondDataType, command);
-
-                    return Activator.CreateInstance(returnType, returnParameter.Value, returnData);
-                }
-
-                default:
-                {
-                    var data = command.ExecuteScalar();
-
-                    if(returnType != typeof(object))
-                    {
-                        data = Convert.ChangeType(data, returnType);
-                    }
-
-                    return data;
-                }
             }
         }
 
@@ -405,7 +432,7 @@ namespace DotNetAppBase.Std.Db
 
         private void Dispose(bool disposing)
         {
-            if(_disposed)
+            if (_disposed)
             {
                 return;
             }
@@ -414,12 +441,12 @@ namespace DotNetAppBase.Std.Db
 
             PartialDispose(disposing);
 
-            if(disposing)
+            if (disposing)
             {
                 GC.SuppressFinalize(this);
             }
 
-            if(Context is DbContext context)
+            if (Context is DbContext context)
             {
                 context.Dispose(disposing);
             }
@@ -441,7 +468,7 @@ namespace DotNetAppBase.Std.Db
 
         public void PartialDispose(bool disposing)
         {
-            foreach(var disposable in _disposableObjects.Where(disposable => !(disposable is DbDataReader) || disposing))
+            foreach (var disposable in _disposableObjects.Where(disposable => !(disposable is DbDataReader) || disposing))
             {
                 disposable.Dispose();
             }

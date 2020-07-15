@@ -1,4 +1,31 @@
-﻿using System;
+﻿#region License
+
+// Copyright(c) 2020 GrappTec
+// 
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+using System;
 using System.Globalization;
 using DotNetAppBase.Std.Exceptions.Base;
 
@@ -13,7 +40,10 @@ namespace DotNetAppBase.Std.Library.I18n
         private string _propertyValue;
         private Type _resourceType;
 
-        public LocalizableString(string propertyName) => _propertyName = propertyName;
+        public LocalizableString(string propertyName)
+        {
+            _propertyName = propertyName;
+        }
 
         public Type ResourceType
         {
@@ -56,7 +86,7 @@ namespace DotNetAppBase.Std.Library.I18n
 
             // If the property value is null, then just cache that value
             // If the resource type is null, then property value is literal, so cache it
-            if(_propertyValue == null || _resourceType == null)
+            if (_propertyValue == null || _resourceType == null)
             {
                 _cachedResult = () => _propertyValue;
             }
@@ -69,7 +99,7 @@ namespace DotNetAppBase.Std.Library.I18n
                 var badlyConfigured = false;
 
                 // Make sure we found the property and it's the correct type, and that the type itself is public
-                if(!_resourceType.IsVisible || property == null || property.PropertyType != typeof(string))
+                if (!_resourceType.IsVisible || property == null || property.PropertyType != typeof(string))
                 {
                     badlyConfigured = true;
                 }
@@ -77,14 +107,14 @@ namespace DotNetAppBase.Std.Library.I18n
                 {
                     // Ensure the getter for the property is available as public static
                     var getter = property.GetGetMethod();
-                    if(getter == null || !(getter.IsPublic && getter.IsStatic))
+                    if (getter == null || !(getter.IsPublic && getter.IsStatic))
                     {
                         badlyConfigured = true;
                     }
                 }
 
                 // If the property is not configured properly, then throw a missing member exception
-                if(badlyConfigured)
+                if (badlyConfigured)
                 {
                     var exceptionMessage = string.Format(CultureInfo.CurrentCulture, _propertyName, _resourceType.FullName, _propertyValue);
 
@@ -93,7 +123,7 @@ namespace DotNetAppBase.Std.Library.I18n
                 else
                 {
                     // We have a valid property, so cache the resource
-                    _cachedResult = () => (string)property.GetValue(null, null);
+                    _cachedResult = () => (string) property.GetValue(null, null);
                 }
             }
 

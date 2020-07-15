@@ -1,4 +1,31 @@
-﻿using System;
+﻿#region License
+
+// Copyright(c) 2020 GrappTec
+// 
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using DotNetAppBase.Std.Exceptions.Contract;
@@ -13,43 +40,22 @@ namespace DotNetAppBase.Std.Worker.Base
     /// </summary>
     public abstract class HostedServiceBase : IHostedService, IDisposable
     {
-        private bool _initialized;
-        private string _name;
-        private ILogger _logger;
-
-        private bool _enabled;
         private bool _disposed;
 
         private Task _executingTask;
         private CancellationTokenSource _stoppingCts;
 
+        // ReSharper disable EmptyConstructor
         protected HostedServiceBase() { }
+        // ReSharper restore EmptyConstructor
 
-        public bool Enabled => _enabled;
+        public bool Enabled { get; private set; }
 
-        public bool IsInitialized => _initialized;
+        public bool IsInitialized { get; private set; }
 
-        protected ILogger Logger => _logger;
+        public string Name { get; private set; }
 
-        public string Name => _name;
-
-        internal void Initialize(string name, ILoggerFactory loggerFactory, IConfigurationSection settingSection)
-        {
-            if (_initialized)
-            {
-                XInitializeException.Reinitialize(this);
-            }
-
-            _initialized = true;
-
-            _name = name;
-            _logger = loggerFactory.CreateLogger($"#{_name}");
-
-            if (settingSection != null)
-            {
-                InternalInitializeFromSettingsSection(settingSection);
-            }
-        }
+        protected ILogger Logger { get; private set; }
 
         /// <summary>
         ///     Triggered when the application host is ready to start the service.
@@ -57,17 +63,17 @@ namespace DotNetAppBase.Std.Worker.Base
         /// <param name="cancellationToken">Indicates that the start process has been aborted.</param>
         public virtual Task StartAsync(CancellationToken cancellationToken)
         {
-            if (_enabled)
+            if (Enabled)
             {
                 return Task.CompletedTask;
             }
 
-            _enabled = true;
+            Enabled = true;
 
             // Create linked token to allow cancelling executing task from provided token
             _stoppingCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
-            _logger.LogInformation("Service is started.");
+            Logger.LogInformation("Service is started.");
 
             // Store the task we're executing
             _executingTask = ExecuteAsync(_stoppingCts.Token);
@@ -88,14 +94,14 @@ namespace DotNetAppBase.Std.Worker.Base
         /// <param name="cancellationToken">Indicates that the shutdown process should no longer be graceful.</param>
         public virtual async Task StopAsync(CancellationToken cancellationToken)
         {
-            if (!_enabled)
+            if (!Enabled)
             {
                 return;
             }
 
-            _enabled = false;
+            Enabled = false;
 
-            _logger.LogInformation("Service is stoping.");
+            Logger.LogInformation("Service is stoping.");
 
             // Stop called without start
             if (_executingTask == null)
@@ -115,10 +121,8 @@ namespace DotNetAppBase.Std.Worker.Base
                     _executingTask.ContinueWith(InternalCleanup, cancellationToken), Task.Delay(Timeout.Infinite, cancellationToken));
             }
 
-            _logger.LogInformation("Service is stoped.");
+            Logger.LogInformation("Service is stoped.");
         }
-
-        protected virtual Task InternalCleanup(Task obj) => Task.CompletedTask;
 
         /// <summary>
         ///     This method is called when the <see cref="IHostedService" /> starts. The implementation should return a task that
@@ -129,7 +133,27 @@ namespace DotNetAppBase.Std.Worker.Base
         /// <returns>A <see cref="Task" /> that represents the long running operations.</returns>
         protected abstract Task ExecuteAsync(CancellationToken cancellationToken);
 
+        protected virtual Task InternalCleanup(Task obj) => Task.CompletedTask;
+
         protected virtual void InternalInitializeFromSettingsSection(IConfigurationSection settingSection) { }
+
+        internal void Initialize(string name, ILoggerFactory loggerFactory, IConfigurationSection settingSection)
+        {
+            if (IsInitialized)
+            {
+                XInitializeException.Reinitialize(this);
+            }
+
+            IsInitialized = true;
+
+            Name = name;
+            Logger = loggerFactory.CreateLogger($"#{Name}");
+
+            if (settingSection != null)
+            {
+                InternalInitializeFromSettingsSection(settingSection);
+            }
+        }
 
         #region Dispose Pattern
 

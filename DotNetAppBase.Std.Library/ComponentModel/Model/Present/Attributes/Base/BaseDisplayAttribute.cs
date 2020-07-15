@@ -1,4 +1,31 @@
-﻿using System;
+﻿#region License
+
+// Copyright(c) 2020 GrappTec
+// 
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+using System;
 using DotNetAppBase.Std.Library.I18n;
 
 namespace DotNetAppBase.Std.Library.ComponentModel.Model.Present.Attributes.Base
@@ -12,38 +39,15 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Present.Attributes.Base
         private string _displayPattern;
         private Type _resourceType;
 
-        public override object TypeId => this;
-
         public string Description
         {
             get => _description.Value;
             set
             {
-                if(_description.Value != value)
+                if (_description.Value != value)
                 {
                     _description.Value = value;
                 }
-            }
-        }
-
-        public virtual int Level { get; set; }
-
-        public string DisplayPattern
-        {
-            get => _displayPattern;
-            set
-            {
-                if(!string.IsNullOrEmpty(value))
-                {
-                    // ReSharper disable LocalizableElement
-                    if(!value.Contains("{"))
-                    {
-                        value = "{" + value + "}";
-                    }
-                    // ReSharper restore LocalizableElement
-                }
-
-                _displayPattern = value;
             }
         }
 
@@ -52,7 +56,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Present.Attributes.Base
             get => _groupName.Value;
             set
             {
-                if(_groupName.Value != value)
+                if (_groupName.Value != value)
                 {
                     _groupName.Value = value;
                 }
@@ -64,7 +68,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Present.Attributes.Base
             get => _name.Value;
             set
             {
-                if(_name.Value != value)
+                if (_name.Value != value)
                 {
                     _name.Value = value;
                 }
@@ -86,6 +90,29 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Present.Attributes.Base
                 _name.ResourceType = value;
                 _description.ResourceType = value;
                 _groupName.ResourceType = value;
+            }
+        }
+
+        public override object TypeId => this;
+
+        public virtual int Level { get; set; }
+
+        public string DisplayPattern
+        {
+            get => _displayPattern;
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    // ReSharper disable LocalizableElement
+                    if (!value.Contains("{"))
+                    {
+                        value = "{" + value + "}";
+                    }
+                    // ReSharper restore LocalizableElement
+                }
+
+                _displayPattern = value;
             }
         }
 

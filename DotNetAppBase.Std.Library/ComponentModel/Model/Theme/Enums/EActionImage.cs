@@ -1,59 +1,86 @@
-﻿namespace DotNetAppBase.Std.Library.ComponentModel.Model.Theme.Enums
+﻿#region License
+
+// Copyright(c) 2020 GrappTec
+// 
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+namespace DotNetAppBase.Std.Library.ComponentModel.Model.Theme.Enums
 {
-	public enum EActionImage
-	{
-		None,
+    public enum EActionImage
+    {
+        None,
 
-		Apply,
-		Cancel,
-		Save,
-		Close,
+        Apply,
+        Cancel,
+        Save,
+        Close,
 
-		Insert,
-		Edit,
-		Delete,
+        Insert,
+        Edit,
+        Delete,
 
-		Refresh,
+        Refresh,
 
-		Find,
-		Filter,
+        Find,
+        Filter,
 
-		Download,
+        Download,
 
-		Open,
-		LoadFrom,
+        Open,
+        LoadFrom,
 
-		Gear,
-		Gears,
+        Gear,
+        Gears,
 
-		Design,
-		Print,
-		PrintPreview,
-		PageSetup,
-		Window,
-		Grid,
-		History,
-		Copy,
+        Design,
+        Print,
+        PrintPreview,
+        PageSetup,
+        Window,
+        Grid,
+        History,
+        Copy,
 
-		Up,
-		Down,
-		Backward,
-		Forward,
+        Up,
+        Down,
+        Backward,
+        Forward,
 
-		Sync,
+        Sync,
 
-		ExpandAll,
-		CollapseAll,
+        ExpandAll,
+        CollapseAll,
 
-		Play,
-		Pause,
-		Stop,
+        Play,
+        Pause,
+        Stop,
 
-		Shutdown,
-		Lock,
-		Unlock,
+        Shutdown,
+        Lock,
+        Unlock,
 
         Import,
         ViewDocument
-	}
+    }
 }

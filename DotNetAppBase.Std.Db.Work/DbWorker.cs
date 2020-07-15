@@ -1,13 +1,40 @@
-﻿using System;
+﻿#region License
+
+// Copyright(c) 2020 GrappTec
+// 
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
-
 #if NETFRAMEWORK
 using System.Data.SqlClient;
+
 #else
 using Microsoft.Data.SqlClient;
 #endif
@@ -23,16 +50,19 @@ namespace DotNetAppBase.Std.Db.Work
 
         private readonly string _myConnectionString;
 
-        public DbWorker(int? usuID = null) => _myConnectionString = _connectionString.Replace("{usuID}", usuID == null ? string.Empty : $"_USUID_{usuID.Value}");
-
-        public static void Configure(string connectionString)
+        public DbWorker(int? usuID = null)
         {
-            _connectionString = connectionString;
+            _myConnectionString = _connectionString.Replace("{usuID}", usuID == null ? string.Empty : $"_USUID_{usuID.Value}");
         }
 
         public Task<DbCollection<TModel>> AsyncCollectionSp<TModel>(string storedProc, params SqlParameter[] parameters) where TModel : DbEntity, new()
         {
             return Task.Run(() => CollectionSp<TModel>(storedProc, parameters));
+        }
+
+        public Task<DataSet> AsyncDataSetSp(string storedProc, params SqlParameter[] parameters)
+        {
+            return Task.Run(() => DataSetSp(storedProc, parameters));
         }
 
         public Task<TModel> AsyncEntitySp<TModel>(string storedProc, params SqlParameter[] parameters) where TModel : DbEntity, new()
@@ -51,7 +81,7 @@ namespace DotNetAppBase.Std.Db.Work
 
             var table = new DataTable();
 
-            using(var adapter = new SqlDataAdapter(comm))
+            using (var adapter = new SqlDataAdapter(comm))
             {
                 adapter.Fill(table);
             }
@@ -72,7 +102,7 @@ namespace DotNetAppBase.Std.Db.Work
 
             var table = new DataTable();
 
-            using(var adapter = new SqlDataAdapter(comm))
+            using (var adapter = new SqlDataAdapter(comm))
             {
                 adapter.Fill(table);
             }
@@ -80,9 +110,14 @@ namespace DotNetAppBase.Std.Db.Work
             return new DbCollection<TModel>(table);
         }
 
+        public static void Configure(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
+
         public void DataReader(string commandText, Action<DbDataReader> processAction, params SqlParameter[] parameters)
         {
-            if(processAction == null)
+            if (processAction == null)
             {
                 throw new ArgumentNullException(nameof(processAction));
             }
@@ -93,7 +128,7 @@ namespace DotNetAppBase.Std.Db.Work
             comm.Parameters.AddRange(parameters);
 
             var reader = comm.ExecuteReader();
-            while(reader.NextResult())
+            while (reader.NextResult())
             {
                 processAction(reader);
             }
@@ -101,7 +136,7 @@ namespace DotNetAppBase.Std.Db.Work
 
         public IEnumerable<T> DataReader<T>(string commandText, Func<SqlDataReader, T> processAction, params SqlParameter[] parameters)
         {
-            if(processAction == null)
+            if (processAction == null)
             {
                 throw new ArgumentNullException(nameof(processAction));
             }
@@ -114,7 +149,7 @@ namespace DotNetAppBase.Std.Db.Work
             comm.Parameters.AddRange(parameters);
 
             var reader = comm.ExecuteReader();
-            while(reader.Read())
+            while (reader.Read())
             {
                 yield return processAction(reader);
             }
@@ -122,7 +157,7 @@ namespace DotNetAppBase.Std.Db.Work
 
         public void DataReaderSp(string storedProc, Action<DbDataReader> processAction, params SqlParameter[] parameters)
         {
-            if(processAction == null)
+            if (processAction == null)
             {
                 throw new ArgumentNullException(nameof(processAction));
             }
@@ -135,7 +170,7 @@ namespace DotNetAppBase.Std.Db.Work
             comm.Parameters.AddRange(parameters);
 
             var reader = comm.ExecuteReader();
-            while(reader.NextResult())
+            while (reader.NextResult())
             {
                 processAction(reader);
             }
@@ -143,7 +178,7 @@ namespace DotNetAppBase.Std.Db.Work
 
         public IEnumerable<T> DataReaderSp<T>(string storedProc, Func<SqlDataReader, T> processAction, params SqlParameter[] parameters)
         {
-            if(processAction == null)
+            if (processAction == null)
             {
                 throw new ArgumentNullException(nameof(processAction));
             }
@@ -158,7 +193,7 @@ namespace DotNetAppBase.Std.Db.Work
             comm.Parameters.AddRange(parameters);
 
             var reader = comm.ExecuteReader();
-            while(reader.Read())
+            while (reader.Read())
             {
                 yield return processAction(reader);
             }
@@ -177,7 +212,7 @@ namespace DotNetAppBase.Std.Db.Work
 
             var set = new DataSet();
 
-            using(var adapter = new SqlDataAdapter(comm))
+            using (var adapter = new SqlDataAdapter(comm))
             {
                 adapter.Fill(set);
             }
@@ -198,17 +233,12 @@ namespace DotNetAppBase.Std.Db.Work
 
             var set = new DataSet();
 
-            using(var adapter = new SqlDataAdapter(comm))
+            using (var adapter = new SqlDataAdapter(comm))
             {
                 adapter.Fill(set);
             }
 
             return set;
-        }
-
-        public Task<DataSet> AsyncDataSetSp(string storedProc, params SqlParameter[] parameters)
-        {
-            return Task.Run(() => DataSetSp(storedProc, parameters));
         }
 
         public DataTable DataTable(string commandText, params SqlParameter[] parameters)
@@ -224,7 +254,7 @@ namespace DotNetAppBase.Std.Db.Work
 
             var table = new DataTable();
 
-            using(var adapter = new SqlDataAdapter(comm))
+            using (var adapter = new SqlDataAdapter(comm))
             {
                 adapter.Fill(table);
             }
@@ -245,7 +275,7 @@ namespace DotNetAppBase.Std.Db.Work
 
             var table = new DataTable();
 
-            using(var adapter = new SqlDataAdapter(comm))
+            using (var adapter = new SqlDataAdapter(comm))
             {
                 adapter.Fill(table);
             }
@@ -292,7 +322,7 @@ namespace DotNetAppBase.Std.Db.Work
             comm.CommandText = commandText;
             comm.Parameters.AddRange(parameters);
 
-            return (TScalar)comm.ExecuteScalar();
+            return (TScalar) comm.ExecuteScalar();
         }
 
         public TScalar ScalarSp<TScalar>(string storedProc, params SqlParameter[] parameters)
@@ -306,7 +336,7 @@ namespace DotNetAppBase.Std.Db.Work
 
             comm.Parameters.AddRange(parameters);
 
-            return (TScalar)comm.ExecuteScalar();
+            return (TScalar) comm.ExecuteScalar();
         }
     }
 }

@@ -1,3 +1,30 @@
+#region License
+
+// Copyright(c) 2020 GrappTec
+// 
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -18,13 +45,13 @@ namespace DotNetAppBase.Std.Db
 
         protected DbSession()
         {
-            if(DbStorage.Instance.DefaultDatabase == null)
+            if (DbStorage.Instance.DefaultDatabase == null)
             {
                 throw new XException("Não foi possível criar uma sessão apartir da base de dados Default.");
             }
 
             _database = DbStorage.Instance.DefaultDatabase as DbDatabase;
-            if(_database == null)
+            if (_database == null)
             {
                 throw new XException($"A classe {GetType().Name} não tem suporte a Database do tipo {DbStorage.Instance.DefaultDatabase.GetType().Name}");
             }
@@ -35,7 +62,7 @@ namespace DotNetAppBase.Std.Db
         protected DbSession(IDbDatabase database)
         {
             _database = database as DbDatabase;
-            if(_database == null)
+            if (_database == null)
             {
                 throw new XException($"A classe {GetType().Name} não tem suporte a Database do tipo {database.GetType().Name}");
             }
@@ -53,11 +80,9 @@ namespace DotNetAppBase.Std.Db
 
         public IDbTransactionManager TransactionManager
         {
-            get => _transactionManager ?? (_transactionManager = new DbTransactionManager(this));
+            get => _transactionManager ??= new DbTransactionManager(this);
             protected set => _transactionManager = value;
         }
-
-        public static IDbSession NewFromDefault() => DbStorage.Instance.DefaultDatabase.NewSession();
 
         public void BeginTransaction()
         {
@@ -77,19 +102,6 @@ namespace DotNetAppBase.Std.Db
 
         public abstract DbParameter CreateReturnParameter();
 
-        public DbAccess GetAccess()
-        {
-            var context = BuildContext() as DbContext;
-            var access = new DbAccess(this, context);
-
-            if(context != null && context.InTransaction)
-            {
-                _accessInTransaction.Add(access, context);
-            }
-
-            return access;
-        }
-
         public abstract bool RetryInteractionOnDbExcepion(DbException exception);
 
         public void Rollback()
@@ -99,11 +111,28 @@ namespace DotNetAppBase.Std.Db
             ChangeContextsState(EDbContextState.Cancelled);
         }
 
+        IDbAccess IDbAccessProvider.GetAccess() => GetAccess();
+
+        public DbAccess GetAccess()
+        {
+            var context = BuildContext() as DbContext;
+            var access = new DbAccess(this, context);
+
+            if (context != null && context.InTransaction)
+            {
+                _accessInTransaction.Add(access, context);
+            }
+
+            return access;
+        }
+
+        public static IDbSession NewFromDefault() => DbStorage.Instance.DefaultDatabase.NewSession();
+
         protected virtual IDbContext InternalBuildContext()
         {
             var context = TransactionManager.InTransaction
-                              ? new DbContext(TransactionManager.Connection, TransactionManager.Transaction, false)
-                              : new DbContext(_database.NewConnection(), true);
+                ? new DbContext(TransactionManager.Connection, TransactionManager.Transaction, false)
+                : new DbContext(_database.NewConnection(), true);
 
             return context;
         }
@@ -111,15 +140,15 @@ namespace DotNetAppBase.Std.Db
         internal void AddAccess(DbAccess access)
         {
             access.Session = this;
-            if(access.Context.InTransaction)
+            if (access.Context.InTransaction)
             {
-                _accessInTransaction.Add(access, (DbContext)access.Context);
+                _accessInTransaction.Add(access, (DbContext) access.Context);
             }
         }
 
         internal void RemoveAccess(IDbAccess dbAccess)
         {
-            if(_accessInTransaction.ContainsKey(dbAccess))
+            if (_accessInTransaction.ContainsKey(dbAccess))
             {
                 _accessInTransaction.Remove(dbAccess);
             }
@@ -127,12 +156,10 @@ namespace DotNetAppBase.Std.Db
 
         private void ChangeContextsState(EDbContextState state)
         {
-            foreach(var context in _accessInTransaction.Values)
+            foreach (var context in _accessInTransaction.Values)
             {
                 context.State = state;
             }
         }
-
-        IDbAccess IDbAccessProvider.GetAccess() => GetAccess();
     }
 }

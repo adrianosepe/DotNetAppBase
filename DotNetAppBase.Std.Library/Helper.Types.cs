@@ -1,4 +1,31 @@
-﻿using System;
+﻿#region License
+
+// Copyright(c) 2020 GrappTec
+// 
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -17,29 +44,29 @@ namespace DotNetAppBase.Std.Library
         {
             public static IEnumerable<ExtensionItem> ExtractGenericTypesFromImplementations(Type contractType, params Type[] types)
             {
-                if(contractType == null)
+                if (contractType == null)
                 {
                     throw new ArgumentNullException(nameof(contractType));
                 }
 
-                if(types == null)
+                if (types == null)
                 {
                     throw new ArgumentNullException(nameof(types));
                 }
 
                 var countGenericArguments = contractType.GetGenericArguments().Length;
 
-                if(countGenericArguments == 0)
+                if (countGenericArguments == 0)
                 {
                     throw new XException("Não é possível extrair tipos genéricos a partir de um tipo de contrato sem argumentos genéricos");
                 }
 
 // ReSharper disable LoopCanBeConvertedToQuery
-                foreach(var type in types)
+                foreach (var type in types)
 // ReSharper restore LoopCanBeConvertedToQuery
                 {
                     var genericArgs = GetGenericArguments(type, countGenericArguments);
-                    if(genericArgs.Length == 0)
+                    if (genericArgs.Length == 0)
                     {
                         continue;
                     }
@@ -54,7 +81,7 @@ namespace DotNetAppBase.Std.Library
 
             public static string FormatName(Type type)
             {
-                if(type.IsGenericType)
+                if (type.IsGenericType)
                 {
                     var name = type.GetGenericTypeDefinition().Name;
                     name = name.Substring(0, name.IndexOf('`'));
@@ -85,7 +112,7 @@ namespace DotNetAppBase.Std.Library
 
             public static Type GetElementType(Type type)
             {
-                if(type.IsArray)
+                if (type.IsArray)
                 {
                     return type.GetElementType();
                 }
@@ -95,7 +122,7 @@ namespace DotNetAppBase.Std.Library
 
             public static Type GetEnumType(Type type)
             {
-                if(type.IsEnum)
+                if (type.IsEnum)
                 {
                     return type;
                 }
@@ -112,11 +139,11 @@ namespace DotNetAppBase.Std.Library
             public static Type[] GetGenericArguments(Type type, int countGenericArguments = 1)
             {
                 var result = type.GetGenericArguments();
-                if(result.Length != countGenericArguments)
+                if (result.Length != countGenericArguments)
                 {
                     return type.BaseType != null && type.BaseType != typeof(object)
-                               ? GetGenericArguments(type.BaseType, countGenericArguments)
-                               : new Type[0];
+                        ? GetGenericArguments(type.BaseType, countGenericArguments)
+                        : new Type[0];
                 }
 
                 return result;
@@ -131,7 +158,7 @@ namespace DotNetAppBase.Std.Library
 
             public static bool Is(Type contract, Type implementation)
             {
-                if(contract.IsInterface)
+                if (contract.IsInterface)
                 {
                     return IsInterface(contract, implementation);
                 }
@@ -141,25 +168,25 @@ namespace DotNetAppBase.Std.Library
 
             public static bool Is<TContract>(object obj, out TContract converted)
             {
-                if(obj is TContract)
+                if (obj is TContract)
                 {
-                    converted = (TContract)obj;
+                    converted = (TContract) obj;
                     return true;
                 }
 
-                converted = default(TContract);
+                converted = default;
                 return false;
             }
 
             public static bool IsAnonymous(Type type)
             {
-                if(type.IsGenericType)
+                if (type.IsGenericType)
                 {
                     var d = type.GetGenericTypeDefinition();
-                    if(d.IsClass && d.IsSealed && d.Attributes.HasFlag(TypeAttributes.NotPublic))
+                    if (d.IsClass && d.IsSealed && d.Attributes.HasFlag(TypeAttributes.NotPublic))
                     {
                         var attributes = d.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false);
-                        if(attributes.Length > 0)
+                        if (attributes.Length > 0)
                         {
                             return true;
                         }
@@ -178,7 +205,7 @@ namespace DotNetAppBase.Std.Library
             public static Type MakeGenericTypeFromGenericType(Type type, Type concreteType)
             {
                 var args = concreteType.GetGenericArguments();
-                if(args.Length == 0)
+                if (args.Length == 0)
                 {
                     return concreteType;
                 }
@@ -188,7 +215,7 @@ namespace DotNetAppBase.Std.Library
 
             public static IEnumerable<Type> NavigateFromInheritance(Type type)
             {
-                while(type != null)
+                while (type != null)
                 {
                     yield return type;
 
@@ -208,27 +235,27 @@ namespace DotNetAppBase.Std.Library
 
             private static bool IsClass(Type contract, Type implementation)
             {
-                if(contract.IsAssignableFrom(implementation))
+                if (contract.IsAssignableFrom(implementation))
                 {
                     return true;
                 }
 
                 return NavigateFromInheritance(implementation)
                     .Any(type =>
-                             {
-                                 var local = type.IsGenericType ? type.GetGenericTypeDefinition() : type;
-                                 return contract == local;
-                             });
+                        {
+                            var local = type.IsGenericType ? type.GetGenericTypeDefinition() : type;
+                            return contract == local;
+                        });
             }
 
             private static bool IsInterface(Type contract, Type implementation)
             {
-                if(contract.IsAssignableFrom(implementation))
+                if (contract.IsAssignableFrom(implementation))
                 {
                     return true;
                 }
 
-                if(implementation.IsInterface && implementation.IsGenericType && implementation.GetGenericTypeDefinition() == contract)
+                if (implementation.IsInterface && implementation.IsGenericType && implementation.GetGenericTypeDefinition() == contract)
                 {
                     return true;
                 }

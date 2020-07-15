@@ -1,4 +1,31 @@
-﻿using System;
+﻿#region License
+
+// Copyright(c) 2020 GrappTec
+// 
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -61,7 +88,7 @@ namespace DotNetAppBase.Std.Library
 
             public static string GetAssemblyHexString(string assemblyPath)
             {
-                if(!Path.IsPathRooted(assemblyPath))
+                if (!Path.IsPathRooted(assemblyPath))
                 {
                     assemblyPath = Path.Combine(Environment.CurrentDirectory, assemblyPath);
                 }
@@ -69,10 +96,10 @@ namespace DotNetAppBase.Std.Library
                 var builder = new StringBuilder();
                 builder.Append("0x");
 
-                using(var stream = new FileStream(assemblyPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (var stream = new FileStream(assemblyPath, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     var currentByte = stream.ReadByte();
-                    while(currentByte > -1)
+                    while (currentByte > -1)
                     {
                         builder.Append(currentByte.ToString("X2", CultureInfo.InvariantCulture));
                         currentByte = stream.ReadByte();
@@ -86,7 +113,7 @@ namespace DotNetAppBase.Std.Library
             {
                 MapDbTypeToClr.TryGetValue(dbType, out var clrType);
 
-                if(asNullable && clrType != null && clrType.IsValueType)
+                if (asNullable && clrType != null && clrType.IsValueType)
                 {
                     clrType = Types.MakeGenericType(typeof(Nullable<>), clrType);
                 }
@@ -96,7 +123,7 @@ namespace DotNetAppBase.Std.Library
 
             public static SqlDbType GetDbType(Type clrType)
             {
-                if(Types.IfNullable(clrType, out var underlyingType))
+                if (Types.IfNullable(clrType, out var underlyingType))
                 {
                     clrType = underlyingType;
                 }
@@ -112,13 +139,13 @@ namespace DotNetAppBase.Std.Library
             {
                 var count = 0;
                 var builder = new StringBuilder();
-                using(var reader = new StringReader(script))
+                using (var reader = new StringReader(script))
                 {
                     string line;
-                    while((line = reader.ReadLine()) != null)
+                    while ((line = reader.ReadLine()) != null)
                     {
                         builder.AppendLine(line);
-                        if(++count == countLines)
+                        if (++count == countLines)
                         {
                             yield return builder.ToString();
 
@@ -128,7 +155,7 @@ namespace DotNetAppBase.Std.Library
                     }
                 }
 
-                if(builder.Length > 0)
+                if (builder.Length > 0)
                 {
                     yield return builder.ToString();
                 }
@@ -142,13 +169,13 @@ namespace DotNetAppBase.Std.Library
                 var start = 0;
                 var batch = matcher.Match(script);
 
-                while(batch.Success)
+                while (batch.Success)
                 {
                     var end = batch.Index;
 
                     var partialScript = script.Substring(start, end - start).Trim();
 
-                    if(Strings.HasData(partialScript))
+                    if (Strings.HasData(partialScript))
                     {
                         yield return partialScript;
                     }
@@ -157,10 +184,10 @@ namespace DotNetAppBase.Std.Library
                     batch = matcher.Match(script, start);
                 }
 
-                if(script.Length > start)
+                if (script.Length > start)
                 {
                     var partialScript = script.Substring(start, script.Length - start).Trim();
-                    if(Strings.HasData(partialScript))
+                    if (Strings.HasData(partialScript))
                     {
                         yield return partialScript;
                     }

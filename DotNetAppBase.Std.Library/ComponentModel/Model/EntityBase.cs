@@ -1,4 +1,31 @@
-﻿using System.ComponentModel;
+﻿#region License
+
+// Copyright(c) 2020 GrappTec
+// 
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
@@ -13,14 +40,9 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model
     [DebuggerDisplay("{" + nameof(DisplaySmall) + "}")]
     public abstract class EntityBase : Entity, IEntity, IDataErrorInfo
     {
-        [Display(Name = EntityBaseDisplayPattern.DefaultDisplayNameID), XPrimaryKey]
-        public abstract int ID { get; set; }
-
-        public virtual string Display => DisplaySmall;
+        public virtual string DisplayFull => $"{ID}";
 
         public virtual string DisplaySmall => $"{ID}";
-        
-        public virtual string DisplayFull => $"{ID}";
 
         [NotMapped]
         string IDataErrorInfo.Error
@@ -43,6 +65,11 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model
                 return !validationResult.HasViolations ? null : validationResult.ToString();
             }
         }
+
+        [Display(Name = EntityBaseDisplayPattern.DefaultDisplayNameID), XPrimaryKey]
+        public abstract int ID { get; set; }
+
+        public virtual string Display => DisplaySmall;
 
         public new class Metadata
         {

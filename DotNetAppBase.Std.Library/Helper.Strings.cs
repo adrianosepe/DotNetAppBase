@@ -1,4 +1,31 @@
-﻿using System;
+﻿#region License
+
+// Copyright(c) 2020 GrappTec
+// 
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -17,7 +44,7 @@ namespace DotNetAppBase.Std.Library
 
             public static string Alignment(ETextAlignment alignment, string data, int length, char alignWith = SpaceChar)
             {
-                switch(alignment)
+                switch (alignment)
                 {
                     case ETextAlignment.Left:
                         return Left(data, length, alignWith);
@@ -40,9 +67,6 @@ namespace DotNetAppBase.Std.Library
             [ContractAnnotation("data:null => true")]
             public static bool IsEmptyOrWhiteSpace(string data) => !HasData(data);
 
-            [ContractAnnotation("data:null => false")]
-            public static bool IsNotEmptyOrWhiteSpace(string data) => HasData(data);
-
             public static bool IsLetterWithDiacritics(char eUnicodeChar)
             {
                 var s = eUnicodeChar.ToString().Normalize(NormalizationForm.FormD);
@@ -53,9 +77,12 @@ namespace DotNetAppBase.Std.Library
                            .All(c2 => CharUnicodeInfo.GetUnicodeCategory(c2) == UnicodeCategory.NonSpacingMark);
             }
 
+            [ContractAnnotation("data:null => false")]
+            public static bool IsNotEmptyOrWhiteSpace(string data) => HasData(data);
+
             public static string RemoveDiacritics(string data)
             {
-                if(string.IsNullOrWhiteSpace(data))
+                if (string.IsNullOrWhiteSpace(data))
                 {
                     return data;
                 }
@@ -77,7 +104,7 @@ namespace DotNetAppBase.Std.Library
 
             public static string Truncate(string data, int length)
             {
-                if(string.IsNullOrEmpty(data))
+                if (string.IsNullOrEmpty(data))
                 {
                     return data;
                 }

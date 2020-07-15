@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net48;netstandard2.0</TargetFrameworks>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\.keys\GrappDefaultKey.pfx</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>DotNetAppBase.Std.Db</AssemblyName>
+    <RootNamespace>DotNetAppBase.Std.Db</RootNamespace>
+    <LangVersion>8</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\.defaults\AssemblySharedCompanyInfo.cs" Link="Properties\AssemblySharedCompanyInfo.cs" />
+    <Compile Include="..\.defaults\AssemblySharedProductInfo.cs" Link="Properties\AssemblySharedProductInfo.cs" />
+    <Compile Include="..\.defaults\AssemblySharedVersionInfo.cs" Link="Properties\AssemblySharedVersionInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DotNetAppBase.Std.Exceptions\DotNetAppBase.Std.Exceptions.csproj" />
+    <ProjectReference Include="..\DotNetAppBase.Std.Extensions\DotNetAppBase.Std.Extensions.csproj" />
+    <ProjectReference Include="..\DotNetAppBase.Std.Library\DotNetAppBase.Std.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="DbAccess.Count.cs">
+      <DependentUpon>DbAccess.cs</DependentUpon>
+    </Compile>
+    <Compile Update="DbAccess.ProcReturn.cs">
+      <DependentUpon>DbAccess.cs</DependentUpon>
+    </Compile>
+    <Compile Update="DbAccess.ReturnType.cs">
+      <DependentUpon>DbAccess.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

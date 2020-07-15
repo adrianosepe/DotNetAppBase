@@ -1,36 +1,64 @@
-﻿using System;
+﻿#region License
+
+// Copyright(c) 2020 GrappTec
+// 
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Cronos;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Timer = System.Timers.Timer;
 
 namespace DotNetAppBase.Std.Worker.Crons
 {
     public abstract class CronHostedService : IHostedService, IDisposable
     {
-        private readonly string _name;
         private readonly string _cronExpression;
         private readonly CronExpression _expression;
         private readonly TimeZoneInfo _timeZoneInfo;
-        private readonly ILogger _logger;
 
-        private System.Timers.Timer _timer;
+        private Timer _timer;
 
         protected CronHostedService(string name, string cronExpression, TimeZoneInfo timeZoneInfo, ILoggerFactory loggerFactory)
         {
-            _name = name;
+            Name = name;
             _cronExpression = cronExpression;
 
             _expression = CronExpression.Parse(cronExpression);
             _timeZoneInfo = timeZoneInfo;
 
-            _logger = loggerFactory.CreateLogger($"{GetType().Name}#{_name}");
+            Logger = loggerFactory.CreateLogger($"{GetType().Name}#{Name}");
         }
 
-        public string Name => _name;
+        public string Name { get; }
 
-        protected ILogger Logger => _logger;
+        protected ILogger Logger { get; }
+
+        public virtual void Dispose() => _timer?.Dispose();
 
         public virtual async Task StartAsync(CancellationToken cancellationToken)
         {
@@ -39,6 +67,15 @@ namespace DotNetAppBase.Std.Worker.Crons
             await ScheduleJob(cancellationToken);
         }
 
+        public virtual async Task StopAsync(CancellationToken cancellationToken)
+        {
+            _timer?.Stop();
+
+            await Task.CompletedTask;
+        }
+
+        public abstract Task<Result> DoWork(CancellationToken cancellationToken);
+
         protected virtual async Task ScheduleJob(CancellationToken cancellationToken)
         {
             var next = _expression.GetNextOccurrence(DateTimeOffset.Now, _timeZoneInfo);
@@ -46,26 +83,26 @@ namespace DotNetAppBase.Std.Worker.Crons
             {
                 var delay = next.Value - DateTimeOffset.Now;
 
-                _timer = new System.Timers.Timer(delay.TotalMilliseconds);
+                _timer = new Timer(delay.TotalMilliseconds);
                 _timer.Elapsed += async (sender, args) =>
-                {
-                    _timer.Dispose();
-                    _timer = null;
-
-                    while (!cancellationToken.IsCancellationRequested)
                     {
-                        var result = await DoWork(cancellationToken);
-                        if (result.Success || result.RetryTimeSpan == null)
+                        _timer.Dispose();
+                        _timer = null;
+
+                        while (!cancellationToken.IsCancellationRequested)
                         {
-                            break;
+                            var result = await DoWork(cancellationToken);
+                            if (result.Success || result.RetryTimeSpan == null)
+                            {
+                                break;
+                            }
                         }
-                    }
 
-                    if (!cancellationToken.IsCancellationRequested)
-                    {
-                        await ScheduleJob(cancellationToken);
-                    }
-                };
+                        if (!cancellationToken.IsCancellationRequested)
+                        {
+                            await ScheduleJob(cancellationToken);
+                        }
+                    };
 
                 _timer.Start();
 
@@ -75,22 +112,10 @@ namespace DotNetAppBase.Std.Worker.Crons
             await Task.CompletedTask;
         }
 
-        public abstract Task<Result> DoWork(CancellationToken cancellationToken);
-
-        public virtual async Task StopAsync(CancellationToken cancellationToken)
-        {
-            _timer?.Stop();
-
-            await Task.CompletedTask;
-        }
-
-        public virtual void Dispose() => _timer?.Dispose();
-
         public class Result
         {
-            public bool Success { get; set; }
-
             public TimeSpan? RetryTimeSpan { get; set; }
+            public bool Success { get; set; }
         }
     }
 }

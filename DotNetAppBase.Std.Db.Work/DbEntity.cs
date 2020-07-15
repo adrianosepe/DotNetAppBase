@@ -1,4 +1,31 @@
-﻿using System;
+﻿#region License
+
+// Copyright(c) 2020 GrappTec
+// 
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,7 +44,10 @@ namespace DotNetAppBase.Std.Db.Work
     {
         private bool _dynamicScheme;
 
-        public DbEntity() => _dynamicScheme = true;
+        public DbEntity()
+        {
+            _dynamicScheme = true;
+        }
 
         public DbEntity(DataRow data, bool dynamicScheme = false)
         {
@@ -42,7 +72,7 @@ namespace DotNetAppBase.Std.Db.Work
                 yield break;
             }
 
-            foreach(var row in dt.Rows.Cast<DataRow>())
+            foreach (var row in dt.Rows.Cast<DataRow>())
             {
                 var entity = new T();
                 entity.Update(row);
@@ -70,7 +100,7 @@ namespace DotNetAppBase.Std.Db.Work
 
         public T Read<T>(string fieldName, T defaultValue)
         {
-            if(IsDataNull)
+            if (IsDataNull)
             {
                 return defaultValue;
             }
@@ -82,7 +112,7 @@ namespace DotNetAppBase.Std.Db.Work
 
         public T Read<T>([Localizable(false)] string fieldName)
         {
-            if(IsDataNull)
+            if (IsDataNull)
             {
                 throw XFlowException.Create($"Os dados deste {nameof(DbEntity)} não foram informados.");
             }
@@ -98,14 +128,14 @@ namespace DotNetAppBase.Std.Db.Work
         {
             CheckExistsColumn<T>(fieldName);
 
-            Data[fieldName] = XHelper.Obj.IsNull(value) ? (object)DBNull.Value : value;
+            Data[fieldName] = XHelper.Obj.IsNull(value) ? (object) DBNull.Value : value;
 
             OnPropertyChanged(fieldName);
         }
 
         protected T AutoRead<T>([CallerMemberName] string fieldName = null) => Read(fieldName, default(T));
 
-        protected T AutoReadEnum<T>([CallerMemberName] string fieldName = null) => (T)Enum.ToObject(typeof(T), Read(fieldName, default(byte)));
+        protected T AutoReadEnum<T>([CallerMemberName] string fieldName = null) => (T) Enum.ToObject(typeof(T), Read(fieldName, default(byte)));
 
         protected void AutoWrite<T>(T value, [CallerMemberName] string fieldName = null) => Write(fieldName, value);
 
@@ -113,16 +143,16 @@ namespace DotNetAppBase.Std.Db.Work
 
         private void CheckExistsColumn<T>(string fieldName)
         {
-            if(!_dynamicScheme)
+            if (!_dynamicScheme)
             {
                 return;
             }
 
-            if(Data == null)
+            if (Data == null)
             {
                 ConfigureAsNew();
             }
-            else if(!_dynamicScheme || Table.Columns.Contains(fieldName))
+            else if (!_dynamicScheme || Table.Columns.Contains(fieldName))
             {
                 return;
             }

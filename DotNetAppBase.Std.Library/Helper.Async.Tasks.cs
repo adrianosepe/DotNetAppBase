@@ -1,3 +1,30 @@
+#region License
+
+// Copyright(c) 2020 GrappTec
+// 
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,8 +35,8 @@ using DotNetAppBase.Std.Exceptions.Assert;
 
 namespace DotNetAppBase.Std.Library
 {
-	public partial class XHelper
-	{
+    public partial class XHelper
+    {
         public static partial class Async
         {
             [Localizable(false)]
@@ -21,59 +48,6 @@ namespace DotNetAppBase.Std.Library
                     XContract.ArgIsNotNull(alias, nameof(alias));
 
                     return $"#Task::{context.GetType().Name}->{alias}";
-                }
-
-                public static System.Threading.Tasks.Task Run(object context, string alias, Action actionToRun)
-                {
-                    XContract.ArgIsNotNull(context, nameof(context));
-                    XContract.ArgIsNotNull(alias, nameof(alias));
-                    XContract.ArgIsNotNull(actionToRun, nameof(actionToRun));
-
-                    return System.Threading.Tasks.Task.Run(
-                        () =>
-                            {
-                                Thread.CurrentThread.Name = CreateTheadName(context, alias);
-
-                                try
-                                {
-                                    actionToRun();
-                                }
-                                catch (Exception ex)
-                                {
-                                    XDebug.OnException(ex);
-
-                                    throw;
-                                }
-                            });
-                }
-
-                public static Task<T> Run<T>(object context, string alias, Func<T> actionToRun)
-                {
-                    XContract.ArgIsNotNull(context, nameof(context));
-                    XContract.ArgIsNotNull(alias, nameof(alias));
-                    XContract.ArgIsNotNull(actionToRun, nameof(actionToRun));
-
-                    return System.Threading.Tasks.Task.Run(
-                        () =>
-                            {
-                                Thread.CurrentThread.Name = CreateTheadName(context, alias);
-
-                                try
-                                {
-                                    return actionToRun();
-                                }
-                                catch (Exception ex)
-                                {
-                                    XDebug.OnException(ex);
-
-                                    throw;
-                                }
-                            });
-                }
-
-                public static async System.Threading.Tasks.Task Wait(TimeSpan? wait = null)
-                {
-                    await System.Threading.Tasks.Task.Delay(wait ?? TimeSpan.FromSeconds(2));
                 }
 
                 public static async Task ForeachAsync<T>(IEnumerable<T> source, int maxParallelCount, Func<T, Task> action)
@@ -114,6 +88,59 @@ namespace DotNetAppBase.Std.Library
                     }
 
                     await completeSemaphoreSlim.WaitAsync();
+                }
+
+                public static Task Run(object context, string alias, Action actionToRun)
+                {
+                    XContract.ArgIsNotNull(context, nameof(context));
+                    XContract.ArgIsNotNull(alias, nameof(alias));
+                    XContract.ArgIsNotNull(actionToRun, nameof(actionToRun));
+
+                    return Task.Run(
+                        () =>
+                            {
+                                Thread.CurrentThread.Name = CreateTheadName(context, alias);
+
+                                try
+                                {
+                                    actionToRun();
+                                }
+                                catch (Exception ex)
+                                {
+                                    XDebug.OnException(ex);
+
+                                    throw;
+                                }
+                            });
+                }
+
+                public static Task<T> Run<T>(object context, string alias, Func<T> actionToRun)
+                {
+                    XContract.ArgIsNotNull(context, nameof(context));
+                    XContract.ArgIsNotNull(alias, nameof(alias));
+                    XContract.ArgIsNotNull(actionToRun, nameof(actionToRun));
+
+                    return Task.Run(
+                        () =>
+                            {
+                                Thread.CurrentThread.Name = CreateTheadName(context, alias);
+
+                                try
+                                {
+                                    return actionToRun();
+                                }
+                                catch (Exception ex)
+                                {
+                                    XDebug.OnException(ex);
+
+                                    throw;
+                                }
+                            });
+                }
+
+                public static async Task Wait(TimeSpan? wait = null)
+                {
+                    await Task.Delay(wait ?? TimeSpan.FromSeconds(2));
                 }
             }
         }

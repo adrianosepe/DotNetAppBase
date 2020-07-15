@@ -1,4 +1,31 @@
-﻿using System;
+﻿#region License
+
+// Copyright(c) 2020 GrappTec
+// 
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -86,7 +113,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 
         public static bool AreIntegerNumbers(string input)
         {
-            if(!XHelper.Strings.HasData(input))
+            if (!XHelper.Strings.HasData(input))
             {
                 return false;
             }
@@ -96,7 +123,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 
         public static bool AreNumbers(string input)
         {
-            if(!XHelper.Strings.HasData(input))
+            if (!XHelper.Strings.HasData(input))
             {
                 return false;
             }
@@ -106,7 +133,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 
         public static bool IsCep(string input)
         {
-            if(!XHelper.Strings.HasData(input))
+            if (!XHelper.Strings.HasData(input))
             {
                 return false;
             }
@@ -116,7 +143,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 
         public static bool IsCnpj(string input)
         {
-            if(!XHelper.Strings.HasData(input))
+            if (!XHelper.Strings.HasData(input))
             {
                 return false;
             }
@@ -126,7 +153,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 
         public static bool IsCpf(string input)
         {
-            if(!XHelper.Strings.HasData(input))
+            if (!XHelper.Strings.HasData(input))
             {
                 return false;
             }
@@ -136,7 +163,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 
         public static bool IsEmail(string input)
         {
-            if(!XHelper.Strings.HasData(input))
+            if (!XHelper.Strings.HasData(input))
             {
                 return false;
             }
@@ -146,12 +173,22 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 
         public static bool IsGuid(string input)
         {
-            if(!XHelper.Strings.HasData(input))
+            if (!XHelper.Strings.HasData(input))
             {
                 return false;
             }
 
             return Regex.IsMatch(input, RegexGuidPattern);
+        }
+
+        public static bool IsHora(string input)
+        {
+            if (!XHelper.Strings.HasData(input))
+            {
+                return false;
+            }
+
+            return Regex.IsMatch(input, RegexHoraPattern);
         }
 
         public static bool IsIccID(string input)
@@ -164,25 +201,15 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
             return Regex.IsMatch(input, IccIDRegex);
         }
 
-        public static bool IsHora(string input)
-        {
-            if(!XHelper.Strings.HasData(input))
-            {
-                return false;
-            }
-
-            return Regex.IsMatch(input, RegexHoraPattern);
-        }
-
         public static bool IsIPv4(string input)
         {
-            if(!XHelper.Strings.HasData(input))
+            if (!XHelper.Strings.HasData(input))
             {
                 return false;
             }
 
             var splitValues = input.Split('.');
-            if(splitValues.Length != 4)
+            if (splitValues.Length != 4)
             {
                 return false;
             }
@@ -192,7 +219,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 
         public static bool IsLatitude(string input)
         {
-            if(!XHelper.Strings.HasData(input))
+            if (!XHelper.Strings.HasData(input))
             {
                 return false;
             }
@@ -210,7 +237,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
         /// </returns>
         public static bool IsLoginPatternLength6To60(string input)
         {
-            if(!XHelper.Strings.HasData(input))
+            if (!XHelper.Strings.HasData(input))
             {
                 return false;
             }
@@ -220,7 +247,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 
         public static bool IsLongitude(string input)
         {
-            if(!XHelper.Strings.HasData(input))
+            if (!XHelper.Strings.HasData(input))
             {
                 return false;
             }
@@ -230,7 +257,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 
         public static bool IsPlaca(string input)
         {
-            if(!XHelper.Strings.HasData(input))
+            if (!XHelper.Strings.HasData(input))
             {
                 return false;
             }
@@ -240,7 +267,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 
         public static bool IsRg(string input)
         {
-            if(!XHelper.Strings.HasData(input))
+            if (!XHelper.Strings.HasData(input))
             {
                 return false;
             }
@@ -250,7 +277,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 
         public static bool IsRuc(string input)
         {
-            if(!XHelper.Strings.HasData(input))
+            if (!XHelper.Strings.HasData(input))
             {
                 return false;
             }
@@ -260,7 +287,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 
         public static bool IsTelefone(string input, bool accept9Digits = true)
         {
-            if(!XHelper.Strings.HasData(input))
+            if (!XHelper.Strings.HasData(input))
             {
                 return false;
             }
@@ -270,7 +297,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 
         public static bool IsTelefone9Digits(string input)
         {
-            if(!XHelper.Strings.HasData(input))
+            if (!XHelper.Strings.HasData(input))
             {
                 return false;
             }
@@ -280,7 +307,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 
         public static bool IsUrl(string input)
         {
-            if(!XHelper.Strings.HasData(input))
+            if (!XHelper.Strings.HasData(input))
             {
                 return false;
             }
@@ -294,7 +321,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
             {
                 var multiplicador = new[] {3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
 
-                if(pis.Trim().Length != 11)
+                if (pis.Trim().Length != 11)
                 {
                     return false;
                 }
@@ -303,7 +330,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
                 pis = pis.Replace("-", string.Empty).Replace(".", string.Empty).PadLeft(11, '0');
 
                 var sum = 0;
-                for(var i = 0; i < 10; i++)
+                for (var i = 0; i < 10; i++)
                 {
                     sum += int.Parse(pis[i].ToString()) * multiplicador[i];
                 }
@@ -329,7 +356,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
                 cnpj = cnpj.Trim();
                 cnpj = cnpj.Replace(".", string.Empty).Replace("-", string.Empty).Replace("/", string.Empty);
 
-                if(cnpj.Length != 14)
+                if (cnpj.Length != 14)
                 {
                     return false;
                 }
@@ -337,7 +364,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
                 var value = cnpj.Substring(0, 12);
 
                 var soma = 0;
-                for(var i = 0; i < 12; i++)
+                for (var i = 0; i < 12; i++)
                 {
                     soma += int.Parse(value[i].ToString()) * multiplicador1[i];
                 }
@@ -349,7 +376,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 
                 soma = 0;
                 value += digito;
-                for(var i = 0; i < 13; i++)
+                for (var i = 0; i < 13; i++)
                 {
                     soma += int.Parse(value[i].ToString()) * multiplicador2[i];
                 }
@@ -377,14 +404,14 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
                 cpf = cpf.Trim();
                 cpf = cpf.Replace(".", string.Empty).Replace("-", string.Empty);
 
-                if(cpf.Length != 11)
+                if (cpf.Length != 11)
                 {
                     return false;
                 }
 
                 var sum = 0;
                 var value = cpf.Substring(0, 9);
-                for(var i = 0; i < 9; i++)
+                for (var i = 0; i < 9; i++)
                 {
                     sum += int.Parse(value[i].ToString()) * multiplicador1[i];
                 }
@@ -396,7 +423,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
 
                 sum = 0;
                 value += digito;
-                for(var i = 0; i < 10; i++)
+                for (var i = 0; i < 10; i++)
                 {
                     sum += int.Parse(value[i].ToString()) * multiplicador2[i];
                 }
@@ -428,12 +455,12 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation
                 var fator = 2;
                 var soma = 0;
 
-                for(var i = ruc.Length - 1; i >= 0; i--)
+                for (var i = ruc.Length - 1; i >= 0; i--)
                 {
                     soma += Convert.ToInt32(ruc[i].ToString()) * fator;
 
                     fator++;
-                    if(fator > baseMax)
+                    if (fator > baseMax)
                     {
                         fator = 2;
                     }

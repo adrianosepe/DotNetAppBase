@@ -1,4 +1,31 @@
-﻿using System;
+﻿#region License
+
+// Copyright(c) 2020 GrappTec
+// 
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,17 +40,12 @@ public static class XCollectionExtensions
 {
     public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> values)
     {
-        if(collection == null)
+        if (collection == null)
         {
             throw new ArgumentNullException(nameof(collection));
         }
 
-        if(values == null)
-        {
-            return;
-        }
-
-        values.ForEach(collection.Add);
+        values?.ForEach(collection.Add);
     }
 
     /// <summary>
@@ -35,12 +57,12 @@ public static class XCollectionExtensions
     /// <returns>The amount if values that were added.</returns>
     public static int AddRangeUnique<T>(this ICollection<T> collection, IEnumerable<T> values)
     {
-        if(collection == null)
+        if (collection == null)
         {
             throw new ArgumentNullException(nameof(collection));
         }
 
-        if(values == null)
+        if (values == null)
         {
             throw new ArgumentNullException(nameof(values));
         }
@@ -63,13 +85,13 @@ public static class XCollectionExtensions
     /// </example>
     public static bool AddUnique<T>(this ICollection<T> collection, T value)
     {
-        if(collection == null)
+        if (collection == null)
         {
             throw new ArgumentNullException(nameof(collection));
         }
 
         var alreadyHas = collection.Contains(value);
-        if(!alreadyHas)
+        if (!alreadyHas)
         {
             collection.Add(value);
         }
@@ -86,9 +108,9 @@ public static class XCollectionExtensions
     /// <returns>The item index</returns>
     public static int IndexOf<T>(this IList<T> list, Func<T, bool> comparison)
     {
-        for(var i = 0; i < list.Count; i++)
+        for (var i = 0; i < list.Count; i++)
         {
-            if(comparison(list[i]))
+            if (comparison(list[i]))
             {
                 return i;
             }
@@ -99,7 +121,7 @@ public static class XCollectionExtensions
 
     public static bool IsEmpty(this ICollection collection)
     {
-        if(collection == null)
+        if (collection == null)
         {
             throw new ArgumentNullException(nameof(collection));
         }
@@ -148,7 +170,7 @@ public static class XCollectionExtensions
     /// </remarks>
     public static string Join<T>(this IList<T> list, string joinString)
     {
-        if(list == null || !list.Any())
+        if (list == null || !list.Any())
         {
             return string.Empty;
         }
@@ -158,11 +180,11 @@ public static class XCollectionExtensions
         var listCount = list.Count;
         var listCountMinusOne = listCount - 1;
 
-        if(listCount > 1)
+        if (listCount > 1)
         {
-            for(var i = 0; i < listCount; i++)
+            for (var i = 0; i < listCount; i++)
             {
-                if(i != listCountMinusOne)
+                if (i != listCountMinusOne)
                 {
                     result.Append(list[i]);
                     result.Append(joinString);
@@ -189,12 +211,12 @@ public static class XCollectionExtensions
     /// <param name="predicate">The predicate.</param>
     public static void RemoveAll<T>(this ICollection<T> collection, Func<T, bool> predicate)
     {
-        if(collection == null)
+        if (collection == null)
         {
             throw new ArgumentNullException(nameof(collection));
         }
 
-        if(predicate == null)
+        if (predicate == null)
         {
             throw new ArgumentNullException(nameof(predicate));
         }
@@ -202,12 +224,12 @@ public static class XCollectionExtensions
         var items = collection.ToArray();
 
         XHelper.Enumerable.ForEach(items, c =>
-                                              {
-                                                  if(predicate(c))
-                                                  {
-                                                      collection.Remove(c);
-                                                  }
-                                              });
+            {
+                if (predicate(c))
+                {
+                    collection.Remove(c);
+                }
+            });
     }
 
     /// <summary>
@@ -219,12 +241,12 @@ public static class XCollectionExtensions
     /// <returns></returns>
     public static bool RemoveFirst<T>(this ICollection<T> collection, Func<T, bool> predicate)
     {
-        if(collection == null)
+        if (collection == null)
         {
             throw new ArgumentNullException(nameof(collection));
         }
 
-        if(predicate == null)
+        if (predicate == null)
         {
             throw new ArgumentNullException(nameof(predicate));
         }
@@ -238,7 +260,6 @@ public static class XCollectionExtensions
         collection.Remove(item);
 
         return true;
-
     }
 
     /// <summary>
@@ -254,12 +275,12 @@ public static class XCollectionExtensions
     /// </remarks>
     public static void RemoveWhere<T>(this ICollection<T> collection, Predicate<T> predicate)
     {
-        if(collection == null)
+        if (collection == null)
         {
             throw new ArgumentNullException(nameof(collection));
         }
 
-        if(predicate == null)
+        if (predicate == null)
         {
             throw new ArgumentNullException(nameof(predicate));
         }
@@ -274,13 +295,13 @@ public static class XCollectionExtensions
 
         // Lists of type System.string and System.Enum (which includes enumerations and structs) must be handled differently
         // than primitives and custom objects (e.g. an object that is not type System.Object).
-        if(entityType == typeof(string))
+        if (entityType == typeof(string))
         {
             var dataTable = new DataTable(entityType.Name);
             dataTable.Columns.Add(entityType.Name);
 
             // Iterate through each item in the list. There is only one cell, so use index 0 to set the value.
-            foreach(var item in list)
+            foreach (var item in list)
             {
                 var row = dataTable.NewRow();
                 row[0] = item;
@@ -290,13 +311,13 @@ public static class XCollectionExtensions
             return dataTable;
         }
 
-        if(entityType.BaseType == typeof(Enum))
+        if (entityType.BaseType == typeof(Enum))
         {
             var dataTable = new DataTable(entityType.Name);
             dataTable.Columns.Add(entityType.Name);
 
             // Iterate through each item in the list. There is only one cell, so use index 0 to set the value.
-            foreach(var namedConstant in Enum.GetNames(entityType))
+            foreach (var namedConstant in Enum.GetNames(entityType))
             {
                 var row = dataTable.NewRow();
                 row[0] = namedConstant;
@@ -329,13 +350,13 @@ public static class XCollectionExtensions
 
         // If the type of the list is a primitive, perform a simple conversion.
         // Otherwise, map the object's properties to columns and fill the cells with the properties' values.
-        if(typeIsPrimitive)
+        if (typeIsPrimitive)
         {
             var dataTable = new DataTable(underlyingType.Name);
             dataTable.Columns.Add(underlyingType.Name);
 
             // Iterate through each item in the list. There is only one cell, so use index 0 to set the value.
-            foreach(var item in list)
+            foreach (var item in list)
             {
                 var row = dataTable.NewRow();
                 row[0] = item;
@@ -350,7 +371,7 @@ public static class XCollectionExtensions
             var propertyDescriptorCollection = TypeDescriptor.GetProperties(entityType);
 
             // Iterate through each property in the object and add that property name as a new column in the data table.
-            foreach(PropertyDescriptor propertyDescriptor in propertyDescriptorCollection)
+            foreach (PropertyDescriptor propertyDescriptor in propertyDescriptorCollection)
             {
                 // Data tables cannot have nullable columns. The cells can have null values, but the actual columns themselves cannot be nullable.
                 // Therefore, if the current property type is nullable, use the underlying type (e.g. if the type is a nullable int, use int).
@@ -362,11 +383,11 @@ public static class XCollectionExtensions
             // Iterate through each object in the list adn add a new row in the data table.
             // Then iterate through each property in the object and add the property's value to the current cell.
             // Once all properties in the current object have been used, add the row to the data table.
-            foreach(var item in list)
+            foreach (var item in list)
             {
                 var row = dataTable.NewRow();
 
-                foreach(PropertyDescriptor propertyDescriptor in propertyDescriptorCollection)
+                foreach (PropertyDescriptor propertyDescriptor in propertyDescriptorCollection)
                 {
                     var value = propertyDescriptor.GetValue(item);
                     row[propertyDescriptor.Name] = value ?? DBNull.Value;

@@ -1,3 +1,30 @@
+#region License
+
+// Copyright(c) 2020 GrappTec
+// 
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,80 +39,6 @@ namespace DotNetAppBase.Std.Library
     {
         public static class Flow
         {
-            public static TData TryGet<TData>(Func<TData> funcGetData, TData failValue = default) => !TryGet(funcGetData, out var data, out _) ? failValue : data;
-
-            public static bool TryGet<TData>(Func<TData> funcGetData, out TData data, out string error)
-            {
-                try
-                {
-                    error = null;
-                    data = funcGetData();
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    XDebug.OnException(ex);
-
-                    error = Exceptions.GetMessageOnTopOfStack(ex);
-                    data = default;
-
-                    return false;
-                }
-            }
-
-            public static async Task<T> TryGetWithAttempt<T>(Func<T> funcGet, CancellationToken cancellationToken, T defaultValue = default, int attempts = 1, int delayBetweenAttempts = 200)
-            {
-                try
-                {
-                    return funcGet();
-                }
-                catch (Exception)
-                {
-                    if (!cancellationToken.IsCancellationRequested)
-                    {
-                        if (--attempts > 0)
-                        {
-                            await Task.Delay(delayBetweenAttempts, cancellationToken);
-
-                            if (!cancellationToken.IsCancellationRequested)
-                            {
-                                return await TryGetWithAttempt(funcGet, cancellationToken, defaultValue, attempts, delayBetweenAttempts);
-                            }
-                        }
-                    }
-
-                    return defaultValue;
-                }
-            }
-
-            public static async Task<bool> TryExecuteWithAttempt(Action action, CancellationToken cancellationToken, int attempts = 1, int delayBetweenAttempts = 200)
-            {
-                try
-                {
-                    action();
-
-                    return true;
-                }
-                catch (Exception)
-                {
-                    if (!cancellationToken.IsCancellationRequested)
-                    {
-                        if (--attempts > 0)
-                        {
-                            await Task.Delay(delayBetweenAttempts, cancellationToken);
-
-                            if (!cancellationToken.IsCancellationRequested)
-                            {
-                                return await TryExecuteWithAttempt(action, cancellationToken, attempts, delayBetweenAttempts);
-                            }
-                        }
-                    }
-
-                    return false;
-                }
-            }
-
             public static bool Ensure(Action action)
             {
                 try
@@ -212,6 +165,80 @@ namespace DotNetAppBase.Std.Library
                 }
 
                 return notNullFunc(obj);
+            }
+
+            public static async Task<bool> TryExecuteWithAttempt(Action action, CancellationToken cancellationToken, int attempts = 1, int delayBetweenAttempts = 200)
+            {
+                try
+                {
+                    action();
+
+                    return true;
+                }
+                catch (Exception)
+                {
+                    if (!cancellationToken.IsCancellationRequested)
+                    {
+                        if (--attempts > 0)
+                        {
+                            await Task.Delay(delayBetweenAttempts, cancellationToken);
+
+                            if (!cancellationToken.IsCancellationRequested)
+                            {
+                                return await TryExecuteWithAttempt(action, cancellationToken, attempts, delayBetweenAttempts);
+                            }
+                        }
+                    }
+
+                    return false;
+                }
+            }
+
+            public static TData TryGet<TData>(Func<TData> funcGetData, TData failValue = default) => !TryGet(funcGetData, out var data, out _) ? failValue : data;
+
+            public static bool TryGet<TData>(Func<TData> funcGetData, out TData data, out string error)
+            {
+                try
+                {
+                    error = null;
+                    data = funcGetData();
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    XDebug.OnException(ex);
+
+                    error = Exceptions.GetMessageOnTopOfStack(ex);
+                    data = default;
+
+                    return false;
+                }
+            }
+
+            public static async Task<T> TryGetWithAttempt<T>(Func<T> funcGet, CancellationToken cancellationToken, T defaultValue = default, int attempts = 1, int delayBetweenAttempts = 200)
+            {
+                try
+                {
+                    return funcGet();
+                }
+                catch (Exception)
+                {
+                    if (!cancellationToken.IsCancellationRequested)
+                    {
+                        if (--attempts > 0)
+                        {
+                            await Task.Delay(delayBetweenAttempts, cancellationToken);
+
+                            if (!cancellationToken.IsCancellationRequested)
+                            {
+                                return await TryGetWithAttempt(funcGet, cancellationToken, defaultValue, attempts, delayBetweenAttempts);
+                            }
+                        }
+                    }
+
+                    return defaultValue;
+                }
             }
         }
     }
