@@ -35,7 +35,7 @@ using System.Resources;
 #if BETA
     [assembly: AssemblyInformationalVersion("BETA")]
 #elif DEBUG
-[assembly: AssemblyInformationalVersion("DEBUG")]
+    [assembly: AssemblyInformationalVersion("1.2.37")]
 #else
-    [assembly: AssemblyInformationalVersion("RTM")]
+    [assembly: AssemblyInformationalVersion("1.2.37")]
 #endif

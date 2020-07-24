@@ -25,8 +25,10 @@
 
 #endregion
 
-using System.Reflection;
-
-[assembly: AssemblyTitle("DotNetAppBase.Std.Db")]
-[assembly: AssemblyDescription("DotNetAppBase.Std.Db.dll")]
-[assembly: AssemblyDefaultAlias("DotNetAppBase.Std.Db.dll")]
+namespace DotNetAppBase.Std.Library.ComponentModel.Model.Validation.Annotations.TypedString
+{
+    public class XNameLargeAttribute : XMaxLengthAttribute
+    {
+        public XNameLargeAttribute() : base(120) { }
+    }
+}

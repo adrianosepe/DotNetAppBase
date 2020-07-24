@@ -5,8 +5,23 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\.keys\GrappDefaultKey.pfx</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <AssemblyName>DotNetAppBase.Std.RestClient</AssemblyName>
+    <RootNamespace>DotNetAppBase.Std.RestClient</RootNamespace>
     <LangVersion>8</LangVersion>
+    <PackageTags>REST, Client, Library</PackageTags>
+
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/GrappTec/DotNetAppBase</PackageProjectUrl>
+    <PackageIcon> </PackageIcon>
+    <RepositoryUrl>https://github.com/GrappTec/DotNetAppBase</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageReleaseNotes>Full GrappTec dependencies published to NuGet.</PackageReleaseNotes>
+    <Version>1.2.27</Version>
+    <Authors>Adriano Sepe</Authors>
+    <Company>GrappTec</Company>
+    <Description>General purpose REST wrappers.</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,13 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\.defaults\AssemblySharedCompanyInfo.cs" Link="Properties\AssemblySharedCompanyInfo.cs" />
-    <Compile Include="..\.defaults\AssemblySharedProductInfo.cs" Link="Properties\AssemblySharedProductInfo.cs" />
-    <Compile Include="..\.defaults\AssemblySharedVersionInfo.cs" Link="Properties\AssemblySharedVersionInfo.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\DotnetAppBase.Std.Library\DotNetAppBase.Std.Library.csproj" />
+    <ProjectReference Include="..\DotNetAppBase.Std.Library\DotNetAppBase.Std.Library.csproj" />
   </ItemGroup>
 
 </Project>

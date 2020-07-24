@@ -27,6 +27,6 @@
 
 using System.Reflection;
 
-[assembly: AssemblyCompany("DotNetAppBase")]
-[assembly: AssemblyCopyright("DotNetAppBase © 2020. All rights reserved.")]
+[assembly: AssemblyCompany("GrappTec")]
+[assembly: AssemblyCopyright("Copyright GrappTec © 2020")]
 [assembly: AssemblyTrademark("DotNetAppBase")]
