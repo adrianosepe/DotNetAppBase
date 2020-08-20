@@ -37,9 +37,9 @@ using Microsoft.Data.SqlClient;
 
 namespace DotNetAppBase.Std.Db.SqlServer
 {
-    public class DbServerSession : DbSession
+    public class SqlServerSession : DbSession
     {
-        public DbServerSession(IDbDatabase dbServerDatabase) : base(dbServerDatabase) { }
+        public SqlServerSession(IDbDatabase dbServerDatabase) : base(dbServerDatabase) { }
 
         public override DbDataAdapter CreateDataAtapter(DbCommand cmd) => new SqlDataAdapter(cmd.CastTo<SqlCommand>());
 

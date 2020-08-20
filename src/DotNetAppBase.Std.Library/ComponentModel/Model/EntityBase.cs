@@ -29,6 +29,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 using DotNetAppBase.Std.Library.ComponentModel.Model.Business;
 using DotNetAppBase.Std.Library.ComponentModel.Model.Present.Attributes;
 using DotNetAppBase.Std.Library.ComponentModel.Model.Utilities;
@@ -40,8 +41,10 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model
     [DebuggerDisplay("{" + nameof(DisplaySmall) + "}")]
     public abstract class EntityBase : Entity, IEntity, IDataErrorInfo
     {
+        [JsonIgnore]
         public virtual string DisplayFull => $"{ID}";
 
+        [JsonIgnore]
         public virtual string DisplaySmall => $"{ID}";
 
         [NotMapped]
@@ -69,6 +72,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model
         [Display(Name = EntityBaseDisplayPattern.DefaultDisplayNameID), XPrimaryKey]
         public abstract int ID { get; set; }
 
+        [JsonIgnore]
         public virtual string Display => DisplaySmall;
 
         public new class Metadata

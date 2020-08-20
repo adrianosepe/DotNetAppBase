@@ -32,18 +32,35 @@ using DotNetAppBase.Std.Library.ComponentModel.Model.Svc.Enums;
 
 namespace DotNetAppBase.Std.Library.ComponentModel.Model.Svc
 {
+    /// <summary>
+    /// Estrutura que representa um resultado
+    /// </summary>
+    /// <typeparam name="TData"></typeparam>
     public class Result<TData>
     {
+        /// <summary>
+        /// Dado produzido e associado ao resultado
+        /// </summary>
         public TData Data { get; set; }
 
+        /// <summary>
+        /// Detalhes a respeito do resultado
+        /// </summary>
         public ResultDetail[] Details { get; set; }
 
-        public bool Fail => !Ok;
-
+        /// <summary>
+        /// Resultado está Ok?
+        /// </summary>
         public bool Ok => Status == EResultStatus.Ok;
 
+        /// <summary>
+        /// Status associado ao resultado
+        /// </summary>
         public EResultStatus Status { get; set; }
 
+        /// <summary>
+        /// Mensagem de status
+        /// </summary>
         public string StatusMessage { get; set; }
 
         public static Result<TData> Clone<TInput>(Result<TInput> origin, TData data = default) =>

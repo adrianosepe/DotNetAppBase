@@ -48,7 +48,7 @@ namespace DotNetAppBase.Std.Db.SqlTrace
 
             foreach (var assembly in files.Select(Assembly.LoadFile))
             {
-                _register = assembly.CreateInstance("SqlTraceViewerRegister") as IDbTraceViewerRegister;
+                _register = assembly.CreateInstance("DbTraceViewerRegister") as IDbTraceViewerRegister;
                 if (_register != null)
                 {
                     DbTraceProvider.Instance.SqlTrace += _register.DbTraceHandler;

@@ -159,19 +159,17 @@ namespace DotNetAppBase.Std.Library
 
             public static class Json
             {
-                private static readonly Lazy<JsonSerializerSettings> LazyDefaultSettings;
+                private static readonly Lazy<JsonSerializerSettings> LazyDefaultSettings = new Lazy<JsonSerializerSettings>(
+                    () => new JsonSerializerSettings
+                        {
+                            ContractResolver = new SerializableContractResolver
+                                {
+                                    IgnoreSerializableAttribute = true
+                                }
+                        });
 
                 static Json()
-                {
-                    LazyDefaultSettings = new Lazy<JsonSerializerSettings>(
-                        () => new JsonSerializerSettings
-                            {
-                                ContractResolver = new SerializableContractResolver
-                                    {
-                                        IgnoreSerializableAttribute = true
-                                    }
-                            });
-                }
+                { }
 
                 public static JsonSerializerSettings DefaultSettings => LazyDefaultSettings.Value;
 

@@ -64,6 +64,22 @@ namespace DotNetAppBase.Std.RestClient
             }
         }
 
+        public async Task<Result<T>> ExecuteWrapped<T>(Func<IFlurlRequest, Task<T>> customizeAction)
+        {
+            try
+            {
+                var url = new Url(_controller.BaseUrl());
+
+                var data = await customizeAction(_controller.Intercept(url.WithTimeout(_controller.DefaultTimeout)));
+
+                return Result<T>.Success(data);
+            }
+            catch (FlurlHttpException ex)
+            {
+                return Result<T>.Exception(ex);
+            }
+        }
+
         public async Task<bool> Get<T>(Action<List<T>> onSuccess, Action<Exception> onError = null)
         {
             try
