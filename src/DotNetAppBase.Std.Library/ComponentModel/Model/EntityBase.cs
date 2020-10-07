@@ -41,13 +41,12 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model
     [DebuggerDisplay("{" + nameof(DisplaySmall) + "}")]
     public abstract class EntityBase : Entity, IEntity, IDataErrorInfo
     {
-        [JsonIgnore]
         public virtual string DisplayFull => $"{ID}";
 
-        [JsonIgnore]
         public virtual string DisplaySmall => $"{ID}";
 
-        [NotMapped]
+        public virtual string Display => DisplaySmall;
+
         string IDataErrorInfo.Error
         {
             get
@@ -58,7 +57,6 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model
             }
         }
 
-        [NotMapped]
         string IDataErrorInfo.this[string columnName]
         {
             get
@@ -71,9 +69,6 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model
 
         [Display(Name = EntityBaseDisplayPattern.DefaultDisplayNameID), XPrimaryKey]
         public abstract int ID { get; set; }
-
-        [JsonIgnore]
-        public virtual string Display => DisplaySmall;
 
         public new class Metadata
         {
