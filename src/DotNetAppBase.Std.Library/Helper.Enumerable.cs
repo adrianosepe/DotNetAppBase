@@ -68,17 +68,16 @@ namespace DotNetAppBase.Std.Library
 
             public static bool IsNullOrEmpty<T>(IEnumerable<T> enumerable)
             {
-                if (enumerable == null)
-                {
-                    return true;
-                }
+                switch (enumerable) {
+                    case null:
+                        return true;
 
-                if (enumerable is T[] asArray)
-                {
-                    return asArray.Length == 0;
-                }
+                    case T[] asArray:
+                        return asArray.Length == 0;
 
-                return !enumerable.Any();
+                    default:
+                        return !enumerable.Any();
+                }
             }
 
             public static TSource MinBy<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> selector, IComparer<TKey> comparer)
@@ -174,6 +173,47 @@ namespace DotNetAppBase.Std.Library
                 var array = values as List<T>;
 
                 return array ?? values.ToList();
+            }
+
+            public static IEnumerable<IEnumerable<T>> Split<T>(IEnumerable<T> values, int nSize)
+            {
+                var data = values.ToArray();
+
+                for (var i = 0; i < data.Length; i += nSize)
+                {
+                    yield return data.Skip(i).Take(nSize);
+                }
+            }
+
+            public static IEnumerable<IEnumerable<T>> GroupWhile<T>(IEnumerable<T> seq, Func<T, T, bool> condition)
+            {
+                var array = seq as T[] ?? seq.ToArray();
+
+                if (array.Length == 0)
+                {
+                    yield return Array.Empty<T>();
+                }
+
+                var prev = array.First();
+                var list = new List<T>
+                    {
+                        prev
+                    };
+
+                foreach (var item in array.Skip(1))
+                {
+                    if (condition(prev, item) == false)
+                    {
+                        yield return list;
+
+                        list = new List<T>();
+                    }
+
+                    list.Add(item);
+                    prev = item;
+                }
+
+                yield return list;
             }
         }
     }

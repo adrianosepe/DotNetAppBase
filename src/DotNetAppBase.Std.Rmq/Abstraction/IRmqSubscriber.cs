@@ -25,11 +25,14 @@
 
 #endregion
 
-using System.Threading.Tasks;
+using System;
+using DotNetAppBase.Std.Rmq.Events;
 
-// ReSharper disable CheckNamespace
-public static class XTaskExtensions
-// ReSharper restore CheckNamespace
+namespace DotNetAppBase.Std.Rmq.Abstraction
 {
-    public static T ReadValue<T>(this Task<T> task) => task.Result;
+    public interface IRmqSubscriber
+    {
+        event EventHandler<RmqReceivedEventArgs> Received;
+        void Initialize(RmqProxy proxy);
+    }
 }

@@ -62,6 +62,29 @@ namespace DotNetAppBase.Std.Library
 
             public static bool AllHaveData(params string[] data) => data.All(HasData);
 
+            public static int IndexOfNth(string str, char value, int nth)
+            {
+                nth--;
+
+                if (nth < 0)
+                {
+                    throw new ArgumentException("Can not find a negative index of substring in string. Must start with 0");
+                }
+
+                var offset = str.IndexOf(value);
+                for (var i = 0; i < nth; i++)
+                {
+                    if (offset == -1)
+                    {
+                        return -1;
+                    }
+
+                    offset = str.IndexOf(value, offset + 1);
+                }
+
+                return offset;
+            }
+
             public static bool HasData(string data) => !string.IsNullOrWhiteSpace(data) && data != Empty;
 
             [ContractAnnotation("data:null => true")]

@@ -32,18 +32,56 @@ using DotNetAppBase.Std.Library.ComponentModel.Model.Svc.Enums;
 
 namespace DotNetAppBase.Std.Library.ComponentModel.Model.Svc
 {
-    public class Result : TypedResult<object>
+    /// <summary>
+    /// Estrutura que representa um resultado
+    /// </summary>
+    /// <typeparam name="TData"></typeparam>
+    public class TypedResult<TData>
     {
-        public new static Result Error(string error) =>
-            new Result
+        /// <summary>
+        /// Dado produzido e associado ao resultado
+        /// </summary>
+        public TData Data { get; set; }
+
+        /// <summary>
+        /// Detalhes a respeito do resultado
+        /// </summary>
+        public ResultDetail[] Details { get; set; }
+
+        /// <summary>
+        /// Resultado está Ok?
+        /// </summary>
+        public bool Ok => Status == EResultStatus.Ok;
+
+        /// <summary>
+        /// Status associado ao resultado
+        /// </summary>
+        public EResultStatus Status { get; set; }
+
+        /// <summary>
+        /// Mensagem de status
+        /// </summary>
+        public string StatusMessage { get; set; }
+
+        public static TypedResult<TData> Clone<TInput>(TypedResult<TInput> origin, TData data = default) =>
+            new TypedResult<TData>
+                {
+                    StatusMessage = origin.StatusMessage,
+                    Status = origin.Status,
+                    Details = origin.Details,
+                    Data = data
+                };
+
+        public static TypedResult<TData> Error(string error) =>
+            new TypedResult<TData>
                 {
                     StatusMessage = error,
                     Status = EResultStatus.Error
                 };
 
-        public new static Result Error(ServiceResponse response)
+        public static TypedResult<TData> Error(ServiceResponse response)
         {
-            return new Result
+            return new TypedResult<TData>
                 {
                     StatusMessage = "Ocorreu um erro no processo, verifique o(s) detalhe(s),",
                     Status = response.Status == EServiceResponse.Succeeded ? EResultStatus.Ok : EResultStatus.Error,
@@ -63,30 +101,32 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Svc
                 };
         }
 
-        public new static Result Exception(Exception ex) => Error(ex.Message);
+        public static TypedResult<TData> Exception(Exception ex) => Error(ex.Message);
 
-        public static Result Success(object data) => new Result
-            {
-                Data = data,
-                Status = EResultStatus.Ok
-            };
+        public static TypedResult<TData> Success(TData data, string success = null) =>
+            new TypedResult<TData>
+                {
+                    Data = data,
+                    StatusMessage = success,
+                    Status = EResultStatus.Ok
+                };
 
-        public new static async Task<Result> Success(Func<Task<object>> funcTask)
+        public static async Task<TypedResult<TData>> Success(Func<Task<TData>> funcTask)
         {
             var data = await funcTask();
 
             return Success(data);
         }
 
-        public new static Result Success(string success) =>
-            new Result
+        public static TypedResult<TData> Success(string success) =>
+            new TypedResult<TData>
                 {
                     StatusMessage = success,
                     Status = EResultStatus.Ok
                 };
 
-        public new static Result Warning(string alert) =>
-            new Result
+        public static TypedResult<TData> Warning(string alert) =>
+            new TypedResult<TData>
                 {
                     StatusMessage = alert,
                     Status = EResultStatus.Warning

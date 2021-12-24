@@ -18,7 +18,7 @@
     <RepositoryUrl>https://github.com/GrappTec/DotNetAppBase</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageReleaseNotes>Full GrappTec dependencies published to NuGet.</PackageReleaseNotes>
-    <Version>1.3.5</Version>
+    <Version>1.3.9</Version>
     <Authors>Adriano Sepe</Authors>
     <Company>GrappTec</Company>
     <Description>General purpose commonly library.</Description>
@@ -34,7 +34,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
-    <DocumentationFile>DotNetAppBase.Std.Library.xml</DocumentationFile>
+    <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|AnyCPU'">

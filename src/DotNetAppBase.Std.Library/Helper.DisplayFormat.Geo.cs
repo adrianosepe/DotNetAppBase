@@ -29,6 +29,8 @@ using System;
 using System.ComponentModel;
 using DotNetAppBase.Std.Library.Properties;
 
+#pragma warning disable 1591
+
 namespace DotNetAppBase.Std.Library
 {
     public partial class XHelper
@@ -88,13 +90,45 @@ namespace DotNetAppBase.Std.Library
                     return $"{km} Km";
                 }
 
-                [Localizable(false)]
                 // Rua Tinguís, 647 - Vila Goes, Apartamento 1 - 86026200 , Londrina - PR
+                [Localizable(false)]
                 public static string FullAddress(string logradouro, string numero, string bairro, string complemento, string cep, string municipio) => $"{logradouro}, {numero} - {bairro}, {complemento} - {cep}, {municipio}";
 
-                [Localizable(false)]
                 // Rua Tinguís, 647 - Vila Goes, Londrina - PR
+                [Localizable(false)]
                 public static string SmallAddress(string logradouro, string numero, string bairro, string municipio) => $"{logradouro}, {numero} - {bairro}, {municipio}";
+
+                public static string FormatCoordinate(double lat, double lng) => $"{EncodeLat(lat)}, {EncodeLng(lng)}";
+
+                public static string EncodeLat(double lat)
+                {
+                    ConvertDecimalToHoursMinutesSeconds(lat, out var d, out var h, out var m);
+
+                    return $"{d}º {h}'' {m}' {(d < 0 ? "S" : "N")}";
+                }
+
+                public static string EncodeLng(double lat)
+                {
+                    ConvertDecimalToHoursMinutesSeconds(lat, out var d, out var h, out var m);
+
+                    return $"{d}º {h}'' {m}' {(d < 0 ? "W" : "E")}";
+                }
+
+                /// <summary>
+                /// Convert decimal to hours, minutes and seconds
+                /// </summary>
+                /// <param name="graus">Decimal of graus</param>
+                /// <param name="g">Extracted graus</param>
+                /// <param name="m">Extracted minutes</param>
+                /// <param name="s">Extracted seconds</param>
+                public static void ConvertDecimalToHoursMinutesSeconds(double graus, out int g, out int m, out int s)
+                {
+                    var hours = Math.Floor(graus);
+                    var minutes = (graus - hours) * 60.0D;
+                    g = (int)Math.Floor(graus / 24);
+                    m = (int)Math.Floor(hours - (g * 24));
+                    s = (int)Math.Floor(minutes);
+                }
             }
         }
     }
