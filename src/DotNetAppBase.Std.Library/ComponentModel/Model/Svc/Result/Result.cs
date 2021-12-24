@@ -37,15 +37,15 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Svc
         public new static Result Error(string error) =>
             new Result
                 {
-                    StatusMessage = error,
-                    Status = EResultStatus.Error
+                    Message = error,
+                    Status = EResultStatus.Error,
                 };
 
         public new static Result Error(ServiceResponse response)
         {
             return new Result
                 {
-                    StatusMessage = "Ocorreu um erro no processo, verifique o(s) detalhe(s),",
+                    Message = "Ocorreu um erro no processo, verifique o(s) detalhe(s),",
                     Status = response.Status == EServiceResponse.Succeeded ? EResultStatus.Ok : EResultStatus.Error,
                     Details = response.ValidationResult.Validations.Select(
                         validationResult =>
@@ -54,7 +54,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Svc
                                     ? validationResult.MemberNames.Aggregate((s, s1) => s + ";" + s1)
                                     : string.Empty;
 
-                                return new ResultDetail
+                                return new ResultInfo
                                     {
                                         Key = key,
                                         Message = validationResult.ErrorMessage
@@ -68,7 +68,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Svc
         public static Result Success(object data) => new Result
             {
                 Data = data,
-                Status = EResultStatus.Ok
+                Status = EResultStatus.Ok,
             };
 
         public new static async Task<Result> Success(Func<Task<object>> funcTask)
@@ -81,15 +81,15 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Svc
         public new static Result Success(string success) =>
             new Result
                 {
-                    StatusMessage = success,
-                    Status = EResultStatus.Ok
+                    Message = success,
+                    Status = EResultStatus.Ok,
                 };
 
         public new static Result Warning(string alert) =>
             new Result
                 {
-                    StatusMessage = alert,
-                    Status = EResultStatus.Warning
+                    Message = alert,
+                    Status = EResultStatus.Warning,
                 };
     }
 }

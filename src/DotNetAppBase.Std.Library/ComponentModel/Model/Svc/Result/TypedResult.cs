@@ -46,7 +46,12 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Svc
         /// <summary>
         /// Detalhes a respeito do resultado
         /// </summary>
-        public ResultDetail[] Details { get; set; }
+        public ResultInfo[] Details { get; set; }
+
+        /// <summary>
+        /// Mensagem associada ao resultado
+        /// </summary>
+        public string Message { get; set; }
 
         /// <summary>
         /// Resultado está Ok?
@@ -58,15 +63,10 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Svc
         /// </summary>
         public EResultStatus Status { get; set; }
 
-        /// <summary>
-        /// Mensagem de status
-        /// </summary>
-        public string StatusMessage { get; set; }
-
         public static TypedResult<TData> Clone<TInput>(TypedResult<TInput> origin, TData data = default) =>
             new TypedResult<TData>
                 {
-                    StatusMessage = origin.StatusMessage,
+                    Message = origin.Message,
                     Status = origin.Status,
                     Details = origin.Details,
                     Data = data
@@ -75,15 +75,15 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Svc
         public static TypedResult<TData> Error(string error) =>
             new TypedResult<TData>
                 {
-                    StatusMessage = error,
-                    Status = EResultStatus.Error
+                    Message = error,
+                    Status = EResultStatus.Error,
                 };
 
         public static TypedResult<TData> Error(ServiceResponse response)
         {
             return new TypedResult<TData>
                 {
-                    StatusMessage = "Ocorreu um erro no processo, verifique o(s) detalhe(s),",
+                    Message = "Ocorreu um erro no processo, verifique o(s) detalhe(s),",
                     Status = response.Status == EServiceResponse.Succeeded ? EResultStatus.Ok : EResultStatus.Error,
                     Details = response.ValidationResult.Validations.Select(
                         validationResult =>
@@ -92,7 +92,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Svc
                                     ? validationResult.MemberNames.Aggregate((s, s1) => s + ";" + s1)
                                     : string.Empty;
 
-                                return new ResultDetail
+                                return new ResultInfo
                                     {
                                         Key = key,
                                         Message = validationResult.ErrorMessage
@@ -107,8 +107,8 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Svc
             new TypedResult<TData>
                 {
                     Data = data,
-                    StatusMessage = success,
-                    Status = EResultStatus.Ok
+                    Message = success,
+                    Status = EResultStatus.Ok,
                 };
 
         public static async Task<TypedResult<TData>> Success(Func<Task<TData>> funcTask)
@@ -121,15 +121,15 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Svc
         public static TypedResult<TData> Success(string success) =>
             new TypedResult<TData>
                 {
-                    StatusMessage = success,
-                    Status = EResultStatus.Ok
+                    Message = success,
+                    Status = EResultStatus.Ok,
                 };
 
         public static TypedResult<TData> Warning(string alert) =>
             new TypedResult<TData>
                 {
-                    StatusMessage = alert,
-                    Status = EResultStatus.Warning
+                    Message = alert,
+                    Status = EResultStatus.Warning,
                 };
     }
 }

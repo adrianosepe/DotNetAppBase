@@ -30,7 +30,7 @@ namespace DotNetAppBase.Std.Library.ComponentModel.Model.Svc
     /// <summary>
     /// Detalhe associado a um resultado
     /// </summary>
-    public class ResultDetail
+    public class ResultInfo
     {
         /// <summary>
         /// Chave que orienta a interpretação da mensagem
