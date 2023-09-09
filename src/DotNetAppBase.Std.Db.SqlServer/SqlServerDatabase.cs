@@ -100,10 +100,11 @@ namespace DotNetAppBase.Std.Db.SqlServer
 
             conn.Open();
 
-            comm.CommandText = "SELECT CONVERT(datetimeoffset, GETDATE) AT TIME ZONE 'E. South America Standard Time'";
-            var dt = (DateTime) comm.ExecuteScalar();
+            comm.CommandText = "SELECT CONVERT(datetimeoffset, GETDATE()) AT TIME ZONE 'E. South America Standard Time'";
+            var result = comm.ExecuteScalar();
+            var dt = (DateTimeOffset)result;
 
-            return dt;
+            return dt.DateTime;
         }
     }
 }

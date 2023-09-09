@@ -589,50 +589,50 @@
         <member name="F:DotNetAppBase.Std.Library.ComponentModel.Model.Interact.Enums.EKey.Alt">
             <summary>The ALT modifier key.</summary>
         </member>
-        <member name="T:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.Result`1">
+        <member name="T:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.ResultInfo">
+            <summary>
+            Detalhe associado a um resultado
+            </summary>
+        </member>
+        <member name="P:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.ResultInfo.Key">
+            <summary>
+            Chave que orienta a interpretação da mensagem
+            </summary>
+        </member>
+        <member name="P:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.ResultInfo.Message">
+            <summary>
+            Mensagem
+            </summary>
+        </member>
+        <member name="T:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.TypedResult`1">
             <summary>
             Estrutura que representa um resultado
             </summary>
             <typeparam name="TData"></typeparam>
         </member>
-        <member name="P:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.Result`1.Data">
+        <member name="P:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.TypedResult`1.Data">
             <summary>
             Dado produzido e associado ao resultado
             </summary>
         </member>
-        <member name="P:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.Result`1.Details">
+        <member name="P:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.TypedResult`1.Details">
             <summary>
             Detalhes a respeito do resultado
             </summary>
         </member>
-        <member name="P:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.Result`1.Ok">
+        <member name="P:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.TypedResult`1.Message">
+            <summary>
+            Mensagem associada ao resultado
+            </summary>
+        </member>
+        <member name="P:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.TypedResult`1.Ok">
             <summary>
             Resultado está Ok?
             </summary>
         </member>
-        <member name="P:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.Result`1.Status">
+        <member name="P:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.TypedResult`1.Status">
             <summary>
             Status associado ao resultado
-            </summary>
-        </member>
-        <member name="P:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.Result`1.StatusMessage">
-            <summary>
-            Mensagem de status
-            </summary>
-        </member>
-        <member name="T:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.ResultDetail">
-            <summary>
-            Detalhe associado a um resultado
-            </summary>
-        </member>
-        <member name="P:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.ResultDetail.Key">
-            <summary>
-            Chave que orienta a interpretação da mensagem
-            </summary>
-        </member>
-        <member name="P:DotNetAppBase.Std.Library.ComponentModel.Model.Svc.ResultDetail.Message">
-            <summary>
-            Mensagem
             </summary>
         </member>
         <member name="F:DotNetAppBase.Std.Library.ComponentModel.Model.Validation.Annotations.TypedNumber.XRangeAttribute.EPreSetBehavior.CurrencyGreaterThanZeroAndMaxDecimal4Dig">
@@ -684,6 +684,15 @@
             <returns>
                 <c>true</c> if [is login pattern (6-60 chars) valid format] [the specified input]; otherwise, <c>false</c>.
             </returns>
+        </member>
+        <member name="M:DotNetAppBase.Std.Library.XHelper.DisplayFormat.Geo.ConvertDecimalToHoursMinutesSeconds(System.Double,System.Int32@,System.Int32@,System.Int32@)">
+            <summary>
+            Convert decimal to hours, minutes and seconds
+            </summary>
+            <param name="graus">Decimal of graus</param>
+            <param name="g">Extracted graus</param>
+            <param name="m">Extracted minutes</param>
+            <param name="s">Extracted seconds</param>
         </member>
         <member name="M:DotNetAppBase.Std.Library.XHelper.Strings.UnconcatString(System.String)">
             <summary>

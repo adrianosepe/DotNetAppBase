@@ -53,7 +53,7 @@ namespace DotNetAppBase.Std.Worker.Crons
             Logger = loggerFactory.CreateLogger($"{GetType().Name}#{Name}");
         }
 
-        protected override void InternalDisposing(bool disposing) => _timer?.Dispose();
+        protected override void InternalDisposing(in bool disposing) => _timer?.Dispose();
 
         public override async Task StartAsync(CancellationToken cancellationToken)
         {

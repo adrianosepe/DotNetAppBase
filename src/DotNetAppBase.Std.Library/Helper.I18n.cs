@@ -27,6 +27,7 @@
 
 using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using DotNetAppBase.Std.Exceptions.Assert;
 
@@ -36,7 +37,7 @@ namespace DotNetAppBase.Std.Library
     {
         // ReSharper disable InconsistentNaming
         public static class I18n
-            // ReSharper restore InconsistentNaming
+        // ReSharper restore InconsistentNaming
         {
             public enum ELanguage
             {
@@ -46,6 +47,7 @@ namespace DotNetAppBase.Std.Library
             }
 
             private static ELanguage _currentLanguage;
+            private static EventHandler _currentLanguageChanged;
 
             static I18n()
             {
@@ -69,14 +71,23 @@ namespace DotNetAppBase.Std.Library
 
                         InternalCurrentLanguageChanged();
 
-                        CurrentLanguageChanged?.Invoke(null, EventArgs.Empty);
+                        _currentLanguageChanged?.Invoke(null, EventArgs.Empty);
                     }
                 }
             }
 
             public static string NumberDecimalSeparator => CurrentCulture.NumberFormat.NumberDecimalSeparator;
 
-            public static event EventHandler CurrentLanguageChanged;
+            public static event EventHandler CurrentLanguageChanged
+            {
+                add
+                {
+                    _currentLanguageChanged += value;
+
+                    value(typeof(I18n), EventArgs.Empty);
+                }
+                remove => _currentLanguageChanged -= value;
+            }
 
             private static CultureInfo IdentifyCulture(ELanguage currentLanguage)
             {
@@ -99,6 +110,9 @@ namespace DotNetAppBase.Std.Library
 
                 Thread.CurrentThread.CurrentCulture = CurrentCulture;
                 Thread.CurrentThread.CurrentUICulture = CurrentCulture;
+
+                CultureInfo.DefaultThreadCurrentCulture = CurrentCulture;
+                CultureInfo.DefaultThreadCurrentUICulture = CurrentCulture;
             }
         }
     }

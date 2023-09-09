@@ -133,7 +133,7 @@ namespace DotNetAppBase.Std.Library
 
                 if (!enumerable1.Any())
                 {
-                    return new T[0];
+                    return Array.Empty<T>();
                 }
 
                 enumerable2 = enumerable2.ToList();
