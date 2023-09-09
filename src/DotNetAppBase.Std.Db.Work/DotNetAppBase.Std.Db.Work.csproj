@@ -8,7 +8,7 @@
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <AssemblyName>DotNetAppBase.Std.Db.Work</AssemblyName>
     <RootNamespace>DotNetAppBase.Std.Db.Work</RootNamespace>
-    <LangVersion>8</LangVersion>
+    <LangVersion>latest</LangVersion>
     <PackageTags>DataTable, DataSet, Library</PackageTags>
 
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -39,8 +39,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="2.0.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
   </ItemGroup>
 

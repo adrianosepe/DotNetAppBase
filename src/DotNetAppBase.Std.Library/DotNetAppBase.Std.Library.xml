@@ -817,11 +817,6 @@
               Looks up a localized string similar to Alerta.
             </summary>
         </member>
-        <member name="P:DotNetAppBase.Std.Library.Properties.DbEnums.XDateRangeAttribute_IsValid_Período_informado_é_inválido_">
-            <summary>
-              Looks up a localized string similar to Período informado é inválido..
-            </summary>
-        </member>
         <member name="T:DotNetAppBase.Std.Library.Properties.DbMessages">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -929,6 +924,11 @@
             </summary>
         </member>
         <member name="P:DotNetAppBase.Std.Library.Properties.DbMessages.XDateRangeAttribute_IsValid_Período_informado_é_inválido_">
+            <summary>
+              Looks up a localized string similar to Período informado é inválido..
+            </summary>
+        </member>
+        <member name="P:DotNetAppBase.Std.Library.Properties.DbMessages.XDateRangeAttribute_IsValid_Período_informado_é_inválido_1">
             <summary>
               Looks up a localized string similar to Período informado é inválido..
             </summary>
