@@ -63,7 +63,7 @@ namespace DotNetAppBase.Std.Library
 
             public static bool IsNotNull(object @object) => !IsNull(@object);
 
-            public static bool IsNull(object @object) => ReferenceEquals(@object, null) || @object is DBNull;
+            public static bool IsNull(object @object) => @object is null or DBNull;
         }
     }
 }

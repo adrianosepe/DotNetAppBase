@@ -39,6 +39,7 @@ namespace DotNetAppBase.Std.Library.Data.Udt
         public DataColumnCollection Columns => Table.Columns;
 
         public DataRowCollection Rows => Table.Rows;
+        
         public DataTable Table { get; }
     }
 }

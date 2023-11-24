@@ -32,19 +32,14 @@ namespace DotNetAppBase.Std.Db.Udt
 {
     public class UdtTypleIntString
     {
-        public UdtTypleIntString()
-        {
-            DataTable = new DataTable
-                {
-                    Columns =
-                        {
-                            new DataColumn("Item1", typeof(int)),
-                            new DataColumn("Item2", typeof(string))
-                        }
-                };
-        }
-
-        public DataTable DataTable { get; }
+        public DataTable DataTable { get; } = new()
+            {
+                Columns =
+                    {
+                        new DataColumn("Item1", typeof(int)),
+                        new DataColumn("Item2", typeof(string))
+                    }
+            };
 
         public void Add(int item1, string item2)
         {

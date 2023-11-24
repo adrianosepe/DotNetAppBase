@@ -26,11 +26,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotNetAppBase.Std.Library\DotNetAppBase.Std.Library.csproj" />
+    <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
+    <ProjectReference Include="..\DotNetAppBase.Std.Library\DotNetAppBase.Std.Library.csproj" />
   </ItemGroup>
 
 </Project>
