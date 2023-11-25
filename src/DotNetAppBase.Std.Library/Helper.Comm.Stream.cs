@@ -42,16 +42,20 @@ namespace DotNetAppBase.Std.Library
 
                 private static readonly unsafe uint* Lookup32UnsafeP = (uint*) GCHandle.Alloc(Lookup32Unsafe, GCHandleType.Pinned).AddrOfPinnedObject();
 
-                public static unsafe string ByteArrayToHexString(byte[] bytes)
+                public static unsafe string ByteArrayToHexString(byte[] bytes, int start=0, int? end=null)
                 {
+                    end ??= bytes.Length;
+
+                    var size = end.Value - start;
+
                     var lookupP = Lookup32UnsafeP;
-                    var result = new char[bytes.Length * 2];
+                    var result = new char[size * 2];
 
                     fixed (byte* bytesP = bytes)
                     fixed (char* resultP = result)
                     {
                         var resultP2 = (uint*) resultP;
-                        for (var i = 0; i < bytes.Length; i++)
+                        for (var i = start; i < end; i++)
                         {
                             resultP2[i] = lookupP[bytesP[i]];
                         }
